@@ -115,7 +115,10 @@ const getCountryData = (countryName) => {
         `${rootEndpoint}/name/${countryName}`
     );
     request
-        .then(response => response.json())
+        .then(
+            response => response.json(),
+            rejectError => alert(rejectError)
+        )
         .then(data => {
             renderCountry(data[0])
             const neighbour = data?.[0].borders?.[0];
@@ -128,8 +131,13 @@ const getCountryData = (countryName) => {
             console.log('secondRequest: ', secondRequest);
             return secondRequest;
         })
-        .then(response => response.json())
-        .then(data => renderCountry(data));        
+        .then(
+            response => response.json(),
+            rejectError => alert(rejectError)
+        )
+        .then(data => renderCountry(data));
 }
 
-getCountryData('portugal');
+btn.addEventListener('click', () => {
+    getCountryData('portugal');
+})
