@@ -10,9 +10,9 @@ console.log('portugalEndpoint: ', portugalEndpoint);
 const publicAPIGithub = 'https://github.com/public-apis/public-apis';
 
 
-const renderCountry = function(data) {
+const renderCountry = function(data, className='') {
     const htmlCountries = `
-    <article class="country">
+    <article class="country" ${className}>
         <img class="country__img" src=${data['flag']} />
         <div class="country__data">
         <h3 class="country__name">${data['name']}</h3>
@@ -28,8 +28,12 @@ const renderCountry = function(data) {
         'beforeend',
         htmlCountries
     );
-    countriesContainer.style.opacity = 1;    
 }
+
+const renderError = (errorMsg) => {
+    countriesContainer.insertAdjacentText('beforeend', errorMsg);
+};
+
 
 // const getCountryAndNeighbour = function(countryName) {
 //     // Create a new request
@@ -110,15 +114,15 @@ const renderCountry = function(data) {
 /* 
 ################################## PROMISE ################################## 
 */
+
+
+
 const getCountryData = (countryName) => {
     const request = fetch(
         `${rootEndpoint}/name/${countryName}`
     );
     request
-        .then(
-            response => response.json(),
-            rejectError => alert(rejectError)
-        )
+        .then(response => response.json())
         .then(data => {
             renderCountry(data[0])
             const neighbour = data?.[0].borders?.[0];
@@ -131,11 +135,15 @@ const getCountryData = (countryName) => {
             console.log('secondRequest: ', secondRequest);
             return secondRequest;
         })
-        .then(
-            response => response.json(),
-            rejectError => alert(rejectError)
-        )
-        .then(data => renderCountry(data));
+        .then(response => response.json())
+        .then(data => renderCountry(data, 'neighbour'))
+        .catch(error => {
+            console.error(`${error} 🎇🎇🎇`);
+            renderError(`Something went wrong!!! 🎇🎇🎇 ${error.message}. Try again!`)
+        })
+        .finally(() => {
+            countriesContainer.style.opacity = 1;    
+        })
 }
 
 btn.addEventListener('click', () => {
