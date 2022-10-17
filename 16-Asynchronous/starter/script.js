@@ -116,7 +116,20 @@ const getCountryData = (countryName) => {
     );
     request
         .then(response => response.json())
-        .then(data => renderCountry(data[0]))    
+        .then(data => {
+            renderCountry(data[0])
+            const neighbour = data?.[0].borders?.[0];
+
+            if (!neighbour) {
+                return;
+            }
+            console.log('neighbour: ', neighbour);
+            const secondRequest =  fetch(`${rootEndpoint}/alpha/${neighbour}`);
+            console.log('secondRequest: ', secondRequest);
+            return secondRequest;
+        })
+        .then(response => response.json())
+        .then(data => renderCountry(data));        
 }
 
 getCountryData('portugal');
