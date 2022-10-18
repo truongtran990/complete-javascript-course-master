@@ -115,27 +115,36 @@ const renderError = (errorMsg) => {
 ################################## PROMISE ################################## 
 */
 
-
+const getJSON = (url, errorMsg='Something went wrong') => {
+    return fetch(url)
+        .then(response => {
+            console.log('response: ', response);
+            if (!response.ok) {
+                throw new Error(`${errorMsg} ${response?.status}`);
+            }
+            return response.json();            
+        })
+}
 
 const getCountryData = (countryName) => {
-    const request = fetch(
-        `${rootEndpoint}/name/${countryName}`
-    );
-    request
-        .then(response => response.json())
+
+    return getJSON(
+        `${rootEndpoint}/name/${countryName}`,
+        'Country not found'
+    )
         .then(data => {
             renderCountry(data[0])
             const neighbour = data?.[0].borders?.[0];
+            console.log('neighbour: ', neighbour);
 
             if (!neighbour) {
-                return;
+                throw new Error(`No neighbour can be found!`);
             }
-            console.log('neighbour: ', neighbour);
-            const secondRequest =  fetch(`${rootEndpoint}/alpha/${neighbour}`);
-            console.log('secondRequest: ', secondRequest);
-            return secondRequest;
+            return getJSON(
+                `${rootEndpoint}/alpha/${neighbour}`,
+                'Country not found'
+            )            
         })
-        .then(response => response.json())
         .then(data => renderCountry(data, 'neighbour'))
         .catch(error => {
             console.error(`${error} 🎇🎇🎇`);
