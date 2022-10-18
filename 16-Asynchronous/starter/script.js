@@ -28,10 +28,12 @@ const renderCountry = function(data, className='') {
         'beforeend',
         htmlCountries
     );
+    countriesContainer.style.opacity = 1;
 }
 
 const renderError = (errorMsg) => {
     countriesContainer.insertAdjacentText('beforeend', errorMsg);
+    countriesContainer.style.opacity = 1;
 };
 
 
@@ -151,10 +153,50 @@ const getCountryData = (countryName) => {
             renderError(`Something went wrong!!! 🎇🎇🎇 ${error.message}. Try again!`)
         })
         .finally(() => {
-            countriesContainer.style.opacity = 1;    
+            countriesContainer.style.opacity = 1;
         })
 }
 
-btn.addEventListener('click', () => {
-    getCountryData('portugal');
-})
+const rootGeoEnpoint = 'https://geocode.xyz';
+const geoApiKey = '786858046131348759256x94117';
+
+const getGeocode = (lat='52.803', lng='13.381') => {
+    return fetch(
+        `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+        error => {
+            console.log('Something went wrong: ', error);
+            throw new Error(`Something went wrong${error}`)
+        }
+    )
+        .then(response => {
+            console.log('response: ', response);
+
+            if (!response.ok) {
+                throw new Error(`Message: ${response.message}! Status code: ${response.status}`)
+            }
+            return response.json()
+        })
+        .then(data => {
+            console.log('data: ', data);
+            const countryName = data.country
+            console.log('countryName at getGeocode: ', countryName);
+            // return getCountryName(countryName);
+            return fetch(
+                `${rootEndpoint}/name/${countryName}`,
+            );
+        })
+        .then(response => {
+            console.log('response: ', response);
+            if (!response.ok) {
+                throw new Error(`${errorMsg} ${response?.status}`);
+            }
+            return response.json();            
+        })
+        .then(data => {
+            renderCountry(data[0])
+        })
+}
+
+getGeocode();
+getGeocode(19.037, 72.873);
+getGeocode(-33.933, 18.474);
