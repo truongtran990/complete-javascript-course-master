@@ -244,45 +244,120 @@ const displayCountry = async () => {
 4. Wait only 0 second timer!
 */
 
-const lotteryPromise = new Promise((resolve, reject) => {
-    console.log('Lotter draw is happening!');
-    const value = Math.random();
-    console.log("value: ", value);
-    if (value >= 0.5) {
-        resolve("You're WIN 🤩");
-    }
-    reject(new Error("You're lose 😫"));
-});
+// const lotteryPromise = new Promise((resolve, reject) => {
+//     console.log('Lotter draw is happening!');
+//     const value = Math.random();
+//     console.log("value: ", value);
+//     if (value >= 0.5) {
+//         resolve("You're WIN 🤩");
+//     }
+//     reject(new Error("You're lose 😫"));
+// });
 
-lotteryPromise
-    .then(res => console.log(res))
-    .catch(err => console.error(err))
+// lotteryPromise
+//     .then(res => console.log(res))
+//     .catch(err => console.error(err))
 
 
 
-const wait = (seconds) => {
-    return new Promise(resolve => {
-        setTimeout(resolve, seconds * 1000);
+// const wait = (seconds) => {
+//     return new Promise(resolve => {
+//         setTimeout(resolve, seconds * 1000);
+//     })
+// }
+
+// wait(1)
+//     .then(res => {
+//         console.log(`Waited 1 seconds`);
+//         return wait(2);
+//     })
+//     .then(res => {
+//         console.log(`Waited 2 seconds`);
+//         return wait(3);
+//     })
+//     .then(res => {
+//         console.log(`Waited 3 seconds`);
+//         return wait(4);
+//     })
+//     .then(res => {
+//         console.log(`Waited 4 seconds`);
+//     })
+
+
+// Promise.resolve('aaa').then(res => console.log(res));
+// Promise.reject(new Error('issue')).catch(error => console.error(error));
+
+
+// navigator.geolocation.getCurrentPosition(
+//     position => {
+//        console.log(position) 
+//     },
+//     error => {
+//         console.error(error)
+//     }
+// )
+console.log('Getting position');
+
+const getPosition = () => {
+    return new Promise((resolve, reject) => {
+        // navigator.geolocation.getCurrentPosition(
+        //     position => resolve(position),
+        //     error => reject(error)
+        // )
+        navigator.geolocation.getCurrentPosition(resolve, reject)
     })
 }
 
-wait(1)
-    .then(res => {
-        console.log(`Waited 1 seconds`);
-        return wait(2);
-    })
-    .then(res => {
-        console.log(`Waited 2 seconds`);
-        return wait(3);
-    })
-    .then(res => {
-        console.log(`Waited 3 seconds`);
-        return wait(4);
-    })
-    .then(res => {
-        console.log(`Waited 4 seconds`);
+getPosition()
+    .then(pos => {
+        console.log(pos)
+        
     })
 
+const whereAmI = () => {
+    getPosition()
+        .then(pos => {
+            console.log('position: ', pos);
 
-Promise.resolve('aaa').then(res => console.log(res));
-Promise.reject(new Error('issue')).catch(error => console.error(error));
+            const {latitude: lat, longitude: lng} = pos.coords;
+            console.log(lng)
+            console.log(lat)
+            return fetch(
+                `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+                error => {
+                    console.log('Something went wrong: ', error);
+                    throw new Error(`Something went wrong${error}`)
+                }
+            )
+        })
+        .then(response => {
+            console.log('response: ', response);
+
+            if (!response.ok) {
+                throw new Error(`Message: ${response.message}! Status code: ${response.status}`)
+            }
+            return response.json()
+        })
+        .then(data => {
+            console.log('data: ', data);
+            const countryName = data.country
+            console.log('countryName at getGeocode: ', countryName);
+            // return getCountryName(countryName);
+            return fetch(
+                `${rootEndpoint}/name/${countryName}`,
+            );
+        })
+        .then(response => {
+            console.log('response: ', response);
+            if (!response.ok) {
+                throw new Error(`Country is not founded ${response?.status}`);
+            }
+            return response.json();            
+        })
+        .then(data => {
+            renderCountry(data[0])
+        })
+}
+
+
+btn.addEventListener('click', whereAmI)
