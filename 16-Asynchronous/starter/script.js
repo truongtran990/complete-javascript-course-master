@@ -197,6 +197,92 @@ const getGeocode = (lat='52.803', lng='13.381') => {
         })
 }
 
-getGeocode();
-getGeocode(19.037, 72.873);
-getGeocode(-33.933, 18.474);
+// getGeocode();
+// getGeocode(19.037, 72.873);
+// getGeocode(-33.933, 18.474);;
+
+
+const getCountryName = async (lat='52.803', lng='13.381') => {
+    try {
+        const response = await fetch(
+            `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+        )
+        try {
+            return await response.json();
+        } catch (error) {
+            console.log(error);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const displayCountry = async () => {
+    const country = await getCountryName();
+    console.log(country.country);
+    return country.country;
+}
+// console.log(displayCountry());
+
+
+// console.log('Test starts!');
+
+// setTimeout(() => {
+//     console.log('Wait only 0 second timer!');
+// }, 0);
+
+// Promise.resolve('Resolved promise 1')
+//     .then(res => console.log(res))
+
+// console.log('Test ends!')
+
+/* 
+
+1. Test starts!
+2. Test ends!
+3. Resolved promise 1
+4. Wait only 0 second timer!
+*/
+
+const lotteryPromise = new Promise((resolve, reject) => {
+    console.log('Lotter draw is happening!');
+    const value = Math.random();
+    console.log("value: ", value);
+    if (value >= 0.5) {
+        resolve("You're WIN 🤩");
+    }
+    reject(new Error("You're lose 😫"));
+});
+
+lotteryPromise
+    .then(res => console.log(res))
+    .catch(err => console.error(err))
+
+
+
+const wait = (seconds) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, seconds * 1000);
+    })
+}
+
+wait(1)
+    .then(res => {
+        console.log(`Waited 1 seconds`);
+        return wait(2);
+    })
+    .then(res => {
+        console.log(`Waited 2 seconds`);
+        return wait(3);
+    })
+    .then(res => {
+        console.log(`Waited 3 seconds`);
+        return wait(4);
+    })
+    .then(res => {
+        console.log(`Waited 4 seconds`);
+    })
+
+
+Promise.resolve('aaa').then(res => console.log(res));
+Promise.reject(new Error('issue')).catch(error => console.error(error));

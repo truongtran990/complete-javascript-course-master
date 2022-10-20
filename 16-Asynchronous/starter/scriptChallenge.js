@@ -22,3 +22,23 @@ PART 1:
 
     
 */
+const rootGeoEnpoint = 'https://geocode.xyz';
+const geoApiKey = '786858046131348759256x94117';
+
+const getCountryName = async (lat='52.803', lng='13.381') => {
+    try {
+        const response = await fetch(
+            `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+        )
+        try {
+            return await response.json();
+        } catch (error) {
+            console.log(error);
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const name = getCountryName();
+console.log(name);
