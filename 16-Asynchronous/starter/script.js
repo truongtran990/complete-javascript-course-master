@@ -440,59 +440,90 @@ GOOD LUCK!!!
 //         console.error(error)
 //     })
 
-const getPosition = () => {
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
-}
+// const getPosition = () => {
+//     return new Promise((resolve, reject) => {
+//         navigator.geolocation.getCurrentPosition(resolve, reject)
+//     })
+// }
 
-const rootGeoEnpoint = 'https://geocode.xyz';
-const geoApiKey = '786858046131348759256x94117';
+// const rootGeoEnpoint = 'https://geocode.xyz';
+// const geoApiKey = '786858046131348759256x94117';
+// const countryRootEndpoint = 'https://restcountries.com/v2';
+
+// const whereAmI = async () => {
+//     // Get geo location
+//     try {
+//         const position = await getPosition();
+//         const {latitude: lat, longitude: lng} = position.coords;
+
+//         // reverse geocoding
+//         const resGeo = await fetch(`${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`);
+//         if (!resGeo.ok) {
+//             errorMsg = `Something wrong when getting geo!`;
+//             console.log(new Error(errorMsg));
+//             throw new Error(errorMsg)
+//         }
+//         const dataGeo = await resGeo.json();
+//         console.log(dataGeo);
+
+//         // country data
+//         const countryName = dataGeo.country || 'vietnam';
+//         const res = await fetch(`${countryRootEndpoint}/name/${countryName}`);
+//         if (!res.ok) {
+//             errorMsg = `Something wrong when getting country!`;
+//             console.log(new Error(errorMsg));
+//             throw new Error(errorMsg)            
+//         }
+//         const data = await res.json();
+
+//         console.log(data);
+
+//         renderCountry(data[0]);
+
+//         return `We are in ${dataGeo.city}`;
+//     } catch (error) {
+//         console.error(new Error(error));
+//         renderError(`${error.message}`)
+//     }
+// };
+
+
+// console.log('1. Starting get location');
+// (
+//     async () => {
+//         const data = await whereAmI();
+//         console.log(data);
+//     }
+// )()
+// console.log('2. Finishing get location');
+
+
+
 const countryRootEndpoint = 'https://restcountries.com/v2';
 
-const whereAmI = async () => {
-    // Get geo location
+const getJSON = (url, errorMsg='Something went wrong') => {
+    return fetch(url)
+        .then(response => {
+            console.log('response: ', response);
+            if (!response.ok) {
+                throw new Error(`${errorMsg} ${response?.status}`);
+            }
+            return response.json();            
+        })
+}
+
+const get3Countries = async(c1, c2, c3) => {
     try {
-        const position = await getPosition();
-        const {latitude: lat, longitude: lng} = position.coords;
-
-        // reverse geocoding
-        const resGeo = await fetch(`${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`);
-        if (!resGeo.ok) {
-            errorMsg = `Something wrong when getting geo!`;
-            console.log(new Error(errorMsg));
-            throw new Error(errorMsg)
-        }
-        const dataGeo = await resGeo.json();
-        console.log(dataGeo);
-
-        // country data
-        const countryName = dataGeo.country || 'vietnam';
-        const res = await fetch(`${countryRootEndpoint}/name/${countryName}`);
-        if (!res.ok) {
-            errorMsg = `Something wrong when getting country!`;
-            console.log(new Error(errorMsg));
-            throw new Error(errorMsg)            
-        }
-        const data = await res.json();
-
-        console.log(data);
-
-        renderCountry(data[0]);
-
-        return `We are in ${dataGeo.city}`;
+        const data3= await Promise.all([
+            getJSON(`${countryRootEndpoint}/name/${c1}`),
+            getJSON(`${countryRootEndpoint}/name/${c2}`),
+            getJSON(`${countryRootEndpoint}/name/${c3}`),
+        ]);
+        console.log(data3.map(data => (data[0].capital)));
     } catch (error) {
         console.error(new Error(error));
-        renderError(`${error.message}`)
+        throw new Error(error);
     }
-};
+}
 
-
-console.log('1. Starting get location');
-(
-    async () => {
-        const data = await whereAmI();
-        console.log(data);
-    }
-)()
-console.log('2. Finishing get location');
+get3Countries('portugal', 'vietnam', 'canada');
