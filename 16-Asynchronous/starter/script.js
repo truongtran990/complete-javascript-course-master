@@ -390,52 +390,83 @@ TEST DATA: Images in the img folder. Test the error handler by passing a wrong i
 
 GOOD LUCK!!!
 */
-let currentImg;
-const imageContainer = document.querySelector('.images');
+// let currentImg;
+// const imageContainer = document.querySelector('.images');
 
-const wait = (seconds) => {
-    return new Promise(resolve => {
-        setTimeout(resolve, seconds * 1000);
-    })
-};
-const createImage = (imgPath) => {
-    return new Promise((resolve, reject) => {
-        /* All the asynchronous code in the callback function here.
-        resolve, reject are the function js, It will consume the value come from promise with .then or .catch value */
-            const image = document.createElement('img');
-            image.src = imgPath;
+// const wait = (seconds) => {
+//     return new Promise(resolve => {
+//         setTimeout(resolve, seconds * 1000);
+//     })
+// };
+// const createImage = (imgPath) => {
+//     return new Promise((resolve, reject) => {
+//         /* All the asynchronous code in the callback function here.
+//         resolve, reject are the function js, It will consume the value come from promise with .then or .catch value */
+//             const image = document.createElement('img');
+//             image.src = imgPath;
             
-            image.addEventListener('load', () => {
-                imageContainer.append(image);
-                resolve(image);
-            });
+//             image.addEventListener('load', () => {
+//                 imageContainer.append(image);
+//                 resolve(image);
+//             });
 
-            image.addEventListener('error', (error) => {
-                reject(new Error(error));
-            });
+//             image.addEventListener('error', (error) => {
+//                 reject(new Error(error));
+//             });
 
-        }
-    );
-};
+//         }
+//     );
+// };
 
-createImage("./img/img-1.jpg")
-    .then(img => {
-        console.log(`Image 1 is loaded`);
-        currentImg = img;
-        return wait(4);
+// createImage("./img/img-1.jpg")
+//     .then(img => {
+//         console.log(`Image 1 is loaded`);
+//         currentImg = img;
+//         return wait(4);
+//     })
+//     .then(() => {
+//         currentImg.style.display = 'none';
+//         return createImage('./img/img-2.jpg');
+//     })
+//     .then(img => {
+//         currentImg = img;
+//         console.log(`Image 2 is loaded`);
+//         return wait(4);
+//     })
+//     .then(() => {
+//         currentImg.style.display = 'none';
+//     })
+//     .catch(error => {
+//         console.error(error)
+//     })
+
+const getPosition = () => {
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
     })
-    .then(() => {
-        currentImg.style.display = 'none';
-        return createImage('./img/img-2.jpg');
-    })
-    .then(img => {
-        currentImg = img;
-        console.log(`Image 2 is loaded`);
-        return wait(4);
-    })
-    .then(() => {
-        currentImg.style.display = 'none';
-    })
-    .catch(error => {
-        console.error(error)
-    })
+}
+
+const rootGeoEnpoint = 'https://geocode.xyz';
+const geoApiKey = '786858046131348759256x94117';
+const countryRootEndpoint = 'https://restcountries.com/v2';
+
+const whereAmI = async () => {
+    // Get geo location
+    const position = await getPosition();
+    const {latitude: lat, longitude: lng} = position.coords;
+
+    // reverse geocoding
+    const resGeo = await fetch(`${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`);
+    const dataGeo = await resGeo.json();
+    console.log(dataGeo);
+
+    // country data
+    const countryName = dataGeo.country || 'vietnam';
+    const res = await fetch(`${countryRootEndpoint}/name/${countryName}`);
+    const data = await res.json();
+
+    console.log(data);
+
+    renderCountry(data[0]);
+}
+whereAmI();
