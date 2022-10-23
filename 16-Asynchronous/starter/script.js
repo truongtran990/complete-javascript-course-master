@@ -479,9 +479,20 @@ const whereAmI = async () => {
         console.log(data);
 
         renderCountry(data[0]);
+
+        return `We are in ${dataGeo.city}`;
     } catch (error) {
         console.error(new Error(error));
         renderError(`${error.message}`)
     }
-}
-whereAmI();
+};
+
+
+console.log('1. Starting get location');
+(
+    async () => {
+        const data = await whereAmI();
+        console.log(data);
+    }
+)()
+console.log('2. Finishing get location');
