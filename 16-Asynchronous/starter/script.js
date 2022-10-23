@@ -117,111 +117,111 @@ const renderError = (errorMsg) => {
 ################################## PROMISE ################################## 
 */
 
-const getJSON = (url, errorMsg='Something went wrong') => {
-    return fetch(url)
-        .then(response => {
-            console.log('response: ', response);
-            if (!response.ok) {
-                throw new Error(`${errorMsg} ${response?.status}`);
-            }
-            return response.json();            
-        })
-}
+// const getJSON = (url, errorMsg='Something went wrong') => {
+//     return fetch(url)
+//         .then(response => {
+//             console.log('response: ', response);
+//             if (!response.ok) {
+//                 throw new Error(`${errorMsg} ${response?.status}`);
+//             }
+//             return response.json();            
+//         })
+// }
 
-const getCountryData = (countryName) => {
+// const getCountryData = (countryName) => {
 
-    return getJSON(
-        `${rootEndpoint}/name/${countryName}`,
-        'Country not found'
-    )
-        .then(data => {
-            renderCountry(data[0])
-            const neighbour = data?.[0].borders?.[0];
-            console.log('neighbour: ', neighbour);
+//     return getJSON(
+//         `${rootEndpoint}/name/${countryName}`,
+//         'Country not found'
+//     )
+//         .then(data => {
+//             renderCountry(data[0])
+//             const neighbour = data?.[0].borders?.[0];
+//             console.log('neighbour: ', neighbour);
 
-            if (!neighbour) {
-                throw new Error(`No neighbour can be found!`);
-            }
-            return getJSON(
-                `${rootEndpoint}/alpha/${neighbour}`,
-                'Country not found'
-            )            
-        })
-        .then(data => renderCountry(data, 'neighbour'))
-        .catch(error => {
-            console.error(`${error} 🎇🎇🎇`);
-            renderError(`Something went wrong!!! 🎇🎇🎇 ${error.message}. Try again!`)
-        })
-        .finally(() => {
-            countriesContainer.style.opacity = 1;
-        })
-}
+//             if (!neighbour) {
+//                 throw new Error(`No neighbour can be found!`);
+//             }
+//             return getJSON(
+//                 `${rootEndpoint}/alpha/${neighbour}`,
+//                 'Country not found'
+//             )            
+//         })
+//         .then(data => renderCountry(data, 'neighbour'))
+//         .catch(error => {
+//             console.error(`${error} 🎇🎇🎇`);
+//             renderError(`Something went wrong!!! 🎇🎇🎇 ${error.message}. Try again!`)
+//         })
+//         .finally(() => {
+//             countriesContainer.style.opacity = 1;
+//         })
+// }
 
-const rootGeoEnpoint = 'https://geocode.xyz';
-const geoApiKey = '786858046131348759256x94117';
+// const rootGeoEnpoint = 'https://geocode.xyz';
+// const geoApiKey = '786858046131348759256x94117';
 
-const getGeocode = (lat='52.803', lng='13.381') => {
-    return fetch(
-        `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
-        error => {
-            console.log('Something went wrong: ', error);
-            throw new Error(`Something went wrong${error}`)
-        }
-    )
-        .then(response => {
-            console.log('response: ', response);
+// const getGeocode = (lat='52.803', lng='13.381') => {
+//     return fetch(
+//         `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+//         error => {
+//             console.log('Something went wrong: ', error);
+//             throw new Error(`Something went wrong${error}`)
+//         }
+//     )
+//         .then(response => {
+//             console.log('response: ', response);
 
-            if (!response.ok) {
-                throw new Error(`Message: ${response.message}! Status code: ${response.status}`)
-            }
-            return response.json()
-        })
-        .then(data => {
-            console.log('data: ', data);
-            const countryName = data.country
-            console.log('countryName at getGeocode: ', countryName);
-            // return getCountryName(countryName);
-            return fetch(
-                `${rootEndpoint}/name/${countryName}`,
-            );
-        })
-        .then(response => {
-            console.log('response: ', response);
-            if (!response.ok) {
-                throw new Error(`${errorMsg} ${response?.status}`);
-            }
-            return response.json();            
-        })
-        .then(data => {
-            renderCountry(data[0])
-        })
-}
+//             if (!response.ok) {
+//                 throw new Error(`Message: ${response.message}! Status code: ${response.status}`)
+//             }
+//             return response.json()
+//         })
+//         .then(data => {
+//             console.log('data: ', data);
+//             const countryName = data.country
+//             console.log('countryName at getGeocode: ', countryName);
+//             // return getCountryName(countryName);
+//             return fetch(
+//                 `${rootEndpoint}/name/${countryName}`,
+//             );
+//         })
+//         .then(response => {
+//             console.log('response: ', response);
+//             if (!response.ok) {
+//                 throw new Error(`${errorMsg} ${response?.status}`);
+//             }
+//             return response.json();            
+//         })
+//         .then(data => {
+//             renderCountry(data[0])
+//         })
+// }
 
 // getGeocode();
 // getGeocode(19.037, 72.873);
 // getGeocode(-33.933, 18.474);;
 
 
-const getCountryName = async (lat='52.803', lng='13.381') => {
-    try {
-        const response = await fetch(
-            `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
-        )
-        try {
-            return await response.json();
-        } catch (error) {
-            console.log(error);
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
+// const getCountryName = async (lat='52.803', lng='13.381') => {
+//     try {
+//         const response = await fetch(
+//             `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+//         )
+//         try {
+//             return await response.json();
+//         } catch (error) {
+//             console.log(error);
+//         }
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-const displayCountry = async () => {
-    const country = await getCountryName();
-    console.log(country.country);
-    return country.country;
-}
+// const displayCountry = async () => {
+//     const country = await getCountryName();
+//     console.log(country.country);
+//     return country.country;
+// }
 // console.log(displayCountry());
 
 
@@ -296,68 +296,146 @@ const displayCountry = async () => {
 //         console.error(error)
 //     }
 // )
-console.log('Getting position');
+// console.log('Getting position');
 
-const getPosition = () => {
-    return new Promise((resolve, reject) => {
-        // navigator.geolocation.getCurrentPosition(
-        //     position => resolve(position),
-        //     error => reject(error)
-        // )
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
-}
+// const getPosition = () => {
+//     return new Promise((resolve, reject) => {
+//         // navigator.geolocation.getCurrentPosition(
+//         //     position => resolve(position),
+//         //     error => reject(error)
+//         // )
+//         navigator.geolocation.getCurrentPosition(resolve, reject)
+//     })
+// }
 
-getPosition()
-    .then(pos => {
-        console.log(pos)
+// getPosition()
+//     .then(pos => {
+//         console.log(pos)
         
+//     })
+
+// const whereAmI = () => {
+//     getPosition()
+//         .then(pos => {
+//             console.log('position: ', pos);
+
+//             const {latitude: lat, longitude: lng} = pos.coords;
+//             console.log(lng)
+//             console.log(lat)
+//             return fetch(
+//                 `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
+//                 error => {
+//                     console.log('Something went wrong: ', error);
+//                     throw new Error(`Something went wrong${error}`)
+//                 }
+//             )
+//         })
+//         .then(response => {
+//             console.log('response: ', response);
+
+//             if (!response.ok) {
+//                 throw new Error(`Message: ${response.message}! Status code: ${response.status}`)
+//             }
+//             return response.json()
+//         })
+//         .then(data => {
+//             console.log('data: ', data);
+//             const countryName = data.country
+//             console.log('countryName at getGeocode: ', countryName);
+//             // return getCountryName(countryName);
+//             return fetch(
+//                 `${rootEndpoint}/name/${countryName}`,
+//             );
+//         })
+//         .then(response => {
+//             console.log('response: ', response);
+//             if (!response.ok) {
+//                 throw new Error(`Country is not founded ${response?.status}`);
+//             }
+//             return response.json();            
+//         })
+//         .then(data => {
+//             renderCountry(data[0])
+//         })
+// }
+
+
+// btn.addEventListener('click', whereAmI)
+
+
+
+
+/* 
+/////////////////////////////////////////
+// Coding Challenge #2
+
+Build the image loading functionality that I just showed you on the screen.
+
+Tasks are not super-descriptive this time, so that you can figure out some sturff on your own. Pretend you're woking on your own.
+
+PART 1.
+1. Create a function 'createImage' which receives imgPath as an input. This function returns a promise which creates a new image (use document.createElement('img')) and sets the .src attribute to the provided image paht. when the image is done loding, append it to the DOM element with the 'images' class, and resolve the promise. The fullilled value should be the image element itself. In case there is an error loding the image ('error' event), reject the promise.
+
+If this part too tricky for you, just watch the first part of the solution.
+
+
+PART 2.
+1. Consume the promise using .then and also add an error handler;
+2. After the image loaded, pause execution for 2 seconds using the wait function we created earlier;
+3. After the 2 seconds have passed, hide the current image (set display to 'none'), and load a second image (HINT: Use the image element returned by the createImage promsie to hide the current image. You will need a global variable for that);
+4. After the second image has loaded, pause execution for 2 seconds again;
+5. After the 2 seconds have passed, hide the current image
+
+TEST DATA: Images in the img folder. Test the error handler by passing a wrong image path. Set the nework speed to 'Fast 3G' in the dev tools Network tab, otherwise images load too fast.
+
+GOOD LUCK!!!
+*/
+let currentImg;
+const imageContainer = document.querySelector('.images');
+
+const wait = (seconds) => {
+    return new Promise(resolve => {
+        setTimeout(resolve, seconds * 1000);
     })
+};
+const createImage = (imgPath) => {
+    return new Promise((resolve, reject) => {
+        /* All the asynchronous code in the callback function here.
+        resolve, reject are the function js, It will consume the value come from promise with .then or .catch value */
+            const image = document.createElement('img');
+            image.src = imgPath;
+            
+            image.addEventListener('load', () => {
+                imageContainer.append(image);
+                resolve(image);
+            });
 
-const whereAmI = () => {
-    getPosition()
-        .then(pos => {
-            console.log('position: ', pos);
+            image.addEventListener('error', (error) => {
+                reject(new Error(error));
+            });
 
-            const {latitude: lat, longitude: lng} = pos.coords;
-            console.log(lng)
-            console.log(lat)
-            return fetch(
-                `${rootGeoEnpoint}/${lat},${lng}?geoit=json&auth=${geoApiKey}`,
-                error => {
-                    console.log('Something went wrong: ', error);
-                    throw new Error(`Something went wrong${error}`)
-                }
-            )
-        })
-        .then(response => {
-            console.log('response: ', response);
+        }
+    );
+};
 
-            if (!response.ok) {
-                throw new Error(`Message: ${response.message}! Status code: ${response.status}`)
-            }
-            return response.json()
-        })
-        .then(data => {
-            console.log('data: ', data);
-            const countryName = data.country
-            console.log('countryName at getGeocode: ', countryName);
-            // return getCountryName(countryName);
-            return fetch(
-                `${rootEndpoint}/name/${countryName}`,
-            );
-        })
-        .then(response => {
-            console.log('response: ', response);
-            if (!response.ok) {
-                throw new Error(`Country is not founded ${response?.status}`);
-            }
-            return response.json();            
-        })
-        .then(data => {
-            renderCountry(data[0])
-        })
-}
-
-
-btn.addEventListener('click', whereAmI)
+createImage("./img/img-1.jpg")
+    .then(img => {
+        console.log(`Image 1 is loaded`);
+        currentImg = img;
+        return wait(4);
+    })
+    .then(() => {
+        currentImg.style.display = 'none';
+        return createImage('./img/img-2.jpg');
+    })
+    .then(img => {
+        currentImg = img;
+        console.log(`Image 2 is loaded`);
+        return wait(4);
+    })
+    .then(() => {
+        currentImg.style.display = 'none';
+    })
+    .catch(error => {
+        console.error(error)
+    })
