@@ -498,8 +498,50 @@ GOOD LUCK!!!
 // console.log('2. Finishing get location');
 
 
+/* ///////////////////////////////////////// promise.allL
+ */
+// const countryRootEndpoint = 'https://restcountries.com/v2';
 
-const countryRootEndpoint = 'https://restcountries.com/v2';
+// const getJSON = (url, errorMsg='Something went wrong') => {
+//     return fetch(url)
+//         .then(response => {
+//             console.log('response: ', response);
+//             if (!response.ok) {
+//                 throw new Error(`${errorMsg} ${response?.status}`);
+//             }
+//             return response.json();            
+//         })
+// }
+
+// const get3Countries = async(c1, c2, c3) => {
+//     try {
+//         /* Promise.all -> Return a new promise: that runs all of the promises at the same time.
+//            Once we have one promise was rejected then -> the whole promises actually rejects as well    
+//         */
+//         const data3= await Promise.all([
+//             getJSON(`${countryRootEndpoint}/name/${c1}`),
+//             getJSON(`${countryRootEndpoint}/name/${c2}`),
+//             getJSON(`${countryRootEndpoint}/name/${c3}`),
+//         ]);
+//         console.log(data3.map(data => (data[0].capital)));
+//     } catch (error) {
+//         console.error(new Error(error));
+//         throw new Error(error);
+//     }
+// }
+
+// get3Countries('portugal', 'vietnam', 'canada');
+
+
+/* ///////////////////////////////////////// promise.race
+ */
+const timeout = async (seconds) => {
+    return new Promise((_, reject) => {
+        setTimeout(() => {
+            reject(new Error('Request take too long time!!!'))
+        }, seconds * 1000);
+    })
+}
 
 const getJSON = (url, errorMsg='Something went wrong') => {
     return fetch(url)
@@ -511,19 +553,22 @@ const getJSON = (url, errorMsg='Something went wrong') => {
             return response.json();            
         })
 }
-
-const get3Countries = async(c1, c2, c3) => {
-    try {
-        const data3= await Promise.all([
-            getJSON(`${countryRootEndpoint}/name/${c1}`),
-            getJSON(`${countryRootEndpoint}/name/${c2}`),
-            getJSON(`${countryRootEndpoint}/name/${c3}`),
+const countryRootEndpoint = 'https://restcountries.com/v2';
+(
+    async () => {
+        const res = await Promise.race([
+            getJSON(`${countryRootEndpoint}/name/vietnam`),
+            getJSON(`${countryRootEndpoint}/name/italy`),
+            getJSON(`${countryRootEndpoint}/name/mexico`),
         ]);
-        console.log(data3.map(data => (data[0].capital)));
-    } catch (error) {
-        console.error(new Error(error));
-        throw new Error(error);
-    }
-}
 
-get3Countries('portugal', 'vietnam', 'canada');
+        console.log(res[0]);
+    }
+)()
+
+Promise.race([
+    getJSON(`${countryRootEndpoint}/name/vietnam`,
+    timeout(1)
+])
+    .then(res => console.log(res[0]))
+    .catch(error => console.log(error))
