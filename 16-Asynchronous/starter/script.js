@@ -6,7 +6,7 @@ const countriesContainer = document.querySelector('.countries');
 ///////////////////////////////////////
 const rootEndpoint = 'https://restcountries.com/v2';
 const portugalEndpoint = `${rootEndpoint}/name/portugal`;
-console.log('portugalEndpoint: ', portugalEndpoint);
+// console.log('portugalEndpoint: ', portugalEndpoint);
 const publicAPIGithub = 'https://github.com/public-apis/public-apis';
 
 
@@ -580,68 +580,223 @@ GOOD LUCK!!!
 */
 
 
-const wait = (seconds) => {
-    return new Promise((resolve) => {
-        setTimeout(resolve, seconds * 1000);
-    })
-}
+// const wait = (seconds) => {
+//     return new Promise((resolve) => {
+//         setTimeout(resolve, seconds * 1000);
+//     })
+// }
 
-const imgContainer = document.querySelector('.images');
+// const imgContainer = document.querySelector('.images');
 
-const createImage = (imgPath) => {
-    return new Promise((resolve, reject) => {
-        const img = document.createElement('img');
-        img.src = imgPath;
+// const createImage = (imgPath) => {
+//     return new Promise((resolve, reject) => {
+//         const img = document.createElement('img');
+//         img.src = imgPath;
 
-        img.addEventListener('load', () => {
-            imgContainer.append(img);
-            resolve(img);
-        })
-        img.addEventListener('error', () => {
-            reject(new Error('Image not found'));
-        })
-    })
-}
+//         img.addEventListener('load', () => {
+//             imgContainer.append(img);
+//             resolve(img);
+//         })
+//         img.addEventListener('error', () => {
+//             reject(new Error('Image not found'));
+//         })
+//     })
+// }
 
 
 
-// let currentImage;
-const loadNPause = async () => {
-    try {
-        let image = await createImage('./img/img-1.jpg');
-        console.log('Image 1 loaded');
-        await wait(4);
-        image.style.display = 'none';
+// // let currentImage;
+// const loadNPause = async () => {
+//     try {
+//         let image = await createImage('./img/img-1.jpg');
+//         console.log('Image 1 loaded');
+//         await wait(4);
+//         image.style.display = 'none';
 
-        image = await createImage('./img/img-2.jpg');
-        console.log('Image 2 loaded');
-        await wait(4);
-        image.style.display = 'none';
+//         image = await createImage('./img/img-2.jpg');
+//         console.log('Image 2 loaded');
+//         await wait(4);
+//         image.style.display = 'none';
         
+//     } catch (error) {
+//         console.error(error)
+//     }
+// }
+
+// // loadNPause();
+
+// const loadAll = async (imgPaths) => {
+//     try {
+//         const imgs = imgPaths.map(async (img) => {
+//             return await createImage(img)
+//         });
+//         // list of promises
+//         console.log('imgs', imgs);
+//         const imgsEl = await Promise.all(imgs);
+//         console.log(imgsEl);
+//         imgsEl.forEach(img => img.classList.add('parallel'));
+//     } catch (error) {
+        
+//     }
+// }
+// loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
+
+
+
+/* 
+######################################### DEEP DIVE INTO ASYNCHRONOUS
+*/
+
+function first() {
+    console.log(1)
+}
+function second() {
+    setTimeout(() => {
+        console.log(2)
+    }, 0);
+}
+function third() {
+    console.log(3)
+}
+
+// first();
+// second();
+// third();
+
+
+function asynchronousRequest(args, callback) {
+    // Throw an error if no arguments are passed
+    if (!args) {
+        console.log(new Error('Something went wrong! Maybe, no args was passed'));
+        return;
+    }
+    return setTimeout(() => {
+        callback(null, {body: args + ' ' + Math.floor(Math.random() * 10)})
+    }, 500);
+}
+
+function callbackHell() {
+    asynchronousRequest(
+        'First',
+        function first(error, response) {
+            if (error) {
+                console.error(error);
+                return;
+            }
+            console.log(response.body);
+            asynchronousRequest(
+                'Second',
+                function second(error, response) {
+                    if (error) {
+                        console.error(error);
+                        return;
+                    }
+                    console.log(response.body);
+                    asynchronousRequest(
+                        null,
+                        function third(error, response) {
+                            if (error) {
+                                console.error(error);
+                                return;
+                            }
+                            console.log(response.body);                            
+                        }
+                    )
+                }
+            )
+        }
+    )
+};
+
+// callbackHell();
+
+/* 
+############################## PROMISES
+A promise represents the completion of an asynchronous functions. It is an object that might return a value in the future.
+
+    promise:
+        status:
+            + pending: initial state before being resolved or rejected
+            + fulfilled: successful operation
+            + rejected: failed operation
+        value:
+            this is the parameter take as a input in the resolve or reject function
+
+        After the promise status is fulfilled or rejected -> a promise is setlled (đã giải quyết xong)
+        
+*/
+// Create a new promise
+// const promise = new Promise((resolve, reject) => {
+//     resolve('Value from promise');
+//     // resolve('failed');
+// });
+
+// How to consume a promise -> That means we have the value after asynchronous code
+// promise.then(response => console.log(response))
+
+// const promise = new Promise((resolve, reject) => {
+//     setTimeout(() => {
+//         resolve('Resolving an asynchronous request!')
+//     }, 2000);
+// });
+// // promise.then(res => console.log(res))
+
+// // promise 
+// //     .then(firstRes => firstRes + ' and chaining')
+// //     .then(secondRes => console.log(secondRes))
+
+// promise
+//     .then((first) => {
+//         const x = first;
+//         console.log(x);
+//         return x + ' and chaining'
+//     })
+//     .then(second => console.log(second))
+
+
+/* Error handling */
+// function getUsers(onSuccess) {
+//     return new Promise((resolve, reject) => {
+//         setTimeout(() => {
+//             if (onSuccess) {
+//                 resolve([
+//                     {id: 1, name: 'Truong'},
+//                     {id: 2, name: 'Anh'},
+//                     {id: 3, name: 'Tran'},
+//                 ]);
+//             } else {
+//                 reject('Failed to call API');
+//             }
+//         }, 1000);
+//     })
+// };
+
+
+// console.log('start handling getUsers data');
+
+// getUsers(true)
+//     .then(res => console.log(res))
+//     .catch(err => console.error(err))
+
+
+/* Using fetch API with Promises */
+// fetch('https://api.github.com/users/octocat')
+//     .then(res => res.json())
+//     .then(data => console.log(data))
+//     .catch(err => console.error(err))
+
+
+
+/* Async Function with async/await */
+// async function allways return a promise instead of a value
+async function getUsers() {
+    try {
+        const res = await fetch('https://api.github.com/users/octocat');
+        const data = await res.json();
+        console.log(data);
     } catch (error) {
         console.error(error)
     }
 }
-
-// loadNPause();
-
-const loadAll = async (imgPaths) => {
-    try {
-        const imgs = imgPaths.map(async (img) => {
-            return await createImage(img)
-        });
-        // list of promises
-        console.log('imgs', imgs);
-        const imgsEl = await Promise.all(imgs);
-        console.log(imgsEl);
-        imgsEl.forEach(img => img.classList.add('parallel'));
-    } catch (error) {
-        
-    }
-}
-loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
-// (
-//     async () => {
-//         const images = await loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'])
-//     }
-// )()
+// console.log(getUsers().then(res => console.log(res)))
+getUsers()
