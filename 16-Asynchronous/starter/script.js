@@ -535,40 +535,113 @@ GOOD LUCK!!!
 
 /* ///////////////////////////////////////// promise.race
  */
-const timeout = async (seconds) => {
-    return new Promise((_, reject) => {
-        setTimeout(() => {
-            reject(new Error('Request take too long time!!!'))
-        }, seconds * 1000);
+
+// const timeout = async (seconds) => {
+//     return new Promise((_, reject) => {
+//         setTimeout(() => {
+//             reject(new Error('Request take too long time!!!'))
+//         }, seconds * 1000);
+//     })
+// }
+
+// const getJSON = (url, errorMsg='Something went wrong') => {
+//     return fetch(url)
+//         .then(response => {
+//             console.log('response: ', response);
+//             if (!response.ok) {
+//                 throw new Error(`${errorMsg} ${response?.status}`);
+//             }
+//             return response.json();            
+//         })
+// }
+// const countryRootEndpoint = 'https://restcountries.com/v2';
+// (
+//     async () => {
+//         const res = await Promise.race([
+//             getJSON(`${countryRootEndpoint}/name/vietnam`),
+//             getJSON(`${countryRootEndpoint}/name/italy`),
+//             getJSON(`${countryRootEndpoint}/name/mexico`),
+//         ]);
+
+//         console.log(res[0]);
+//     }
+// )()
+
+// Promise.race([
+//     getJSON(`${countryRootEndpoint}/name/vietnam`,
+//     timeout(1)
+// ])
+//     .then(res => console.log(res[0]))
+//     .catch(error => console.log(error))
+
+
+
+/* /////////////////////////////////// CODING CHALLENGE 3 
+*/
+
+
+const wait = (seconds) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, seconds * 1000);
     })
 }
 
-const getJSON = (url, errorMsg='Something went wrong') => {
-    return fetch(url)
-        .then(response => {
-            console.log('response: ', response);
-            if (!response.ok) {
-                throw new Error(`${errorMsg} ${response?.status}`);
-            }
-            return response.json();            
+const imgContainer = document.querySelector('.images');
+
+const createImage = (imgPath) => {
+    return new Promise((resolve, reject) => {
+        const img = document.createElement('img');
+        img.src = imgPath;
+
+        img.addEventListener('load', () => {
+            imgContainer.append(img);
+            resolve(img);
         })
+        img.addEventListener('error', () => {
+            reject(new Error('Image not found'));
+        })
+    })
 }
-const countryRootEndpoint = 'https://restcountries.com/v2';
-(
-    async () => {
-        const res = await Promise.race([
-            getJSON(`${countryRootEndpoint}/name/vietnam`),
-            getJSON(`${countryRootEndpoint}/name/italy`),
-            getJSON(`${countryRootEndpoint}/name/mexico`),
-        ]);
 
-        console.log(res[0]);
+
+
+// let currentImage;
+const loadNPause = async () => {
+    try {
+        let image = await createImage('./img/img-1.jpg');
+        console.log('Image 1 loaded');
+        await wait(4);
+        image.style.display = 'none';
+
+        image = await createImage('./img/img-2.jpg');
+        console.log('Image 2 loaded');
+        await wait(4);
+        image.style.display = 'none';
+        
+    } catch (error) {
+        console.error(error)
     }
-)()
+}
 
-Promise.race([
-    getJSON(`${countryRootEndpoint}/name/vietnam`,
-    timeout(1)
-])
-    .then(res => console.log(res[0]))
-    .catch(error => console.log(error))
+// loadNPause();
+
+const loadAll = async (imgPaths) => {
+    try {
+        const imgs = imgPaths.map(async (img) => {
+            return await createImage(img)
+        });
+        // list of promises
+        console.log('imgs', imgs);
+        const imgsEl = await Promise.all(imgs);
+        console.log(imgsEl);
+        imgsEl.forEach(img => img.classList.add('parallel'));
+    } catch (error) {
+        
+    }
+}
+loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg']);
+// (
+//     async () => {
+//         const images = await loadAll(['img/img-1.jpg', 'img/img-2.jpg', 'img/img-3.jpg'])
+//     }
+// )()
