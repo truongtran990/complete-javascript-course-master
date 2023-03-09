@@ -468,3 +468,32 @@ const bill = 430;
 const tip = bill <= 300 && bill >= 50 ? bill * 0.15 : bill * 0.2;
 console.log(`The bill was ${bill}, the tip was ${tip}, and the total value ${bill + tip}`);
 */
+
+
+/* #################################################### LET, CONST, VAR #################################################### */
+let age = 30;
+
+age = 40;
+console.log(age)
+
+/* 
+Value of const can not be change
+*/
+// const birthYear = 1991;
+// birthYear = 2000;
+
+// const job;
+
+var job = "programer";
+job = "teacher";
+
+/* 
+Let if block scope
+var is function scope
+*/
+
+
+// When you don't declare variable with: let, const or var. But js create a properti on a global object;
+lastName = "Truong Tran"
+console.log(lastName)
+console.log("window object from script.js", window);
