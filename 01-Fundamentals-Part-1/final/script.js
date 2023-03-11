@@ -495,5 +495,108 @@ var is function scope
 
 // When you don't declare variable with: let, const or var. But js create a properti on a global object;
 lastName = "Truong Tran"
-console.log(lastName)
-console.log("window object from script.js", window);
+// console.log(lastName)
+// console.log("window object from script.js", window);
+
+
+/* Operator */
+const yearNow = 2044
+const truongAge = yearNow - 1999;
+const anhAge = yearNow - 2000;
+// console.log(truongAge, anhAge, "log about age");
+
+
+
+/* 
+type coercion
+*/
+
+// convert string to int when operator is: -, *, /
+// convert in to string when operator is: +
+
+// console.log(1 - "10" + 9);
+// console.log(1 + "10" - 9);
+
+
+
+/* 
+truthy and falsy
+*/
+// There are 5 falsy values: 0, "", null, undefined, NaN
+
+
+
+/* 
+== vs ===
+*/
+// if you use the ==, javascript will perform type coercion to convert the string to number.
+// because of that: we can see
+const age1 = "18";
+const isEqual = (age1 == 18); // return: true
+
+// but if you use the strict mode to compare
+// "18" not convert to number -> so it not exactly equally to 18 number
+const isEqualStrict = (age1 ===18); // return false 
+
+
+
+// js receive input from user input as string type
+// const inputFavourite = prompt("What is your favourite?");
+// console.log(`your favourite is ${inputFavourite}. typeof ${typeof inputFavourite}`);
+
+
+/* 
+Logical boolen
+*/
+// AND: 
+// return true: if all is true, else -> false
+
+// OR
+// return false: if all is false, else -> return true
+
+
+/* 
+switch case
+if we dont have the the break statement in the case block code. if the condition id match -> it will run all the case bellow until meet the break statement
+*/
+
+const day = "tuesday";
+// will dispay like this
+/* 
+learn english
+learn golang
+learn python
+learn web
+learn devops
+nothing to learn :)
+*/
+// switch (day) {
+//   case "monday": // strict comparison
+//     console.log(`learn js`);  
+//     break;
+//   case "tuesday":
+//     console.log(`learn english`);
+//   case "wednesday":
+//   case "thursday":
+//     console.log(`learn golang`);
+//     break;
+//   case "friday":
+//     console.log(`learn python`);
+//   case "saturday":
+//     console.log(`learn web`);
+//   case "sunday":
+//     console.log(`learn devops`);
+//   default:
+//     console.log(`nothing to learn :)`);
+//     break;
+// }
+
+
+/* 
+ternary operator
+*/
+
+const ternirary = 20;
+
+const myDrink = ternirary > 19 ? "coffee" : "water";
+console.log(`my favorite myDrink ${myDrink}`);
