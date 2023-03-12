@@ -1,0 +1,39 @@
+<mxfile host="65bd71144e">
+    <diagram id="lMwR-94AsmG2G8TDhHJj" name="Page-1">
+        <mxGraphModel dx="725" dy="691" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="13" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Lucida Console;fontSize=12;fontColor=#FFFFFF;" edge="1" parent="1" source="5" target="6">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;font face=&quot;Lucida Console&quot;&gt;2. Divide and conquer&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;fillColor=default;fontColor=#FFFFFF;strokeColor=#CC0000;fillStyle=auto;gradientColor=none;labelBackgroundColor=default;fontSize=12;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="200" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Lucida Console;fontSize=12;fontColor=#FFFFFF;labelBackgroundColor=#000000;" edge="1" parent="1" source="6" target="11">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="&lt;span style=&quot;font-size: 13px;&quot;&gt;&lt;font face=&quot;Lucida Console&quot;&gt;3. Dont' be afraid to do as much research as you have to do&lt;/font&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;fillColor=default;fontColor=#FFFFFF;strokeColor=#CC0000;fillStyle=auto;gradientColor=none;backgroundOutline=0;labelBackgroundColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="360" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" style="edgeStyle=none;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;fontFamily=Lucida Console;fontSize=12;fontColor=#FFFFFF;" edge="1" parent="1" source="10" target="5">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="&lt;font style=&quot;background-color: rgb(0, 0, 0);&quot; face=&quot;Lucida Console&quot;&gt;1. Make sure you 100% understand the problem. Ask the right question to get clear picture of the problem&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;fillColor=default;fontColor=#FFFFFF;strokeColor=#CC0000;fillStyle=auto;gradientColor=none;labelBackgroundColor=default;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="40" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="&lt;span style=&quot;font-size: 13px;&quot;&gt;&lt;font face=&quot;Lucida Console&quot;&gt;4. For bigger problems, write pseudo-code before writing actual code&lt;/font&gt;&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;shadow=1;fillColor=default;fontColor=#FFFFFF;strokeColor=#CC0000;fillStyle=auto;gradientColor=none;backgroundOutline=0;labelBackgroundColor=#000000;" vertex="1" parent="1">
+                    <mxGeometry x="160" y="520" width="280" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="&lt;b&gt;&lt;font style=&quot;&quot; color=&quot;#cc0000&quot;&gt;How to solve problem?&lt;/font&gt;&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=#FFFFFF;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;shadow=1;fillStyle=auto;fontFamily=Lucida Console;fontSize=12;fontColor=#FFFFFF;labelBackgroundColor=#FFFFFF;rotation=90;" vertex="1" parent="1">
+                    <mxGeometry x="-20" y="310" width="240" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="" style="swimlane;startSize=0;rounded=0;shadow=1;fillStyle=auto;strokeColor=#CC0000;fontFamily=Lucida Console;fontSize=12;fontColor=#CC0000;fillColor=default;gradientColor=none;html=1;" vertex="1" collapsed="1" parent="1">
+                    <mxGeometry x="80" width="400" height="650" as="geometry">
+                        <mxRectangle x="40" y="5" width="440" height="640" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
