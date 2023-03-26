@@ -128,3 +128,49 @@ logo.classList.remove("c");
 // switch add or remove
 logo.classList.toggle("c");
 logo.classList.contains("c");
+
+/* 
+
+scroll to element in the page
+*/
+// the old way
+const btnScrollTo = document.querySelector(".btn--scroll-to");
+const section1 = document.querySelector("#section--1");
+
+btnScrollTo.addEventListener("click", function (event) {
+  // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
+  const s1Coords = section1.getBoundingClientRect();
+
+  console.log("#section--1", s1Coords);
+
+  //   get the current element of event click to - in this case this is the btnScrollTo
+  console.log("btn--scroll-to", event.target.getBoundingClientRect());
+
+  //   calculate the the distance of the page when you scroll vertical or horizonal. default when we at the top of the page and don't scroll by horizontal flow is {window.pageXOffset: 0, window.pageYOffset: 0}
+  console.log("current scroll (X/Y)", window.pageXOffset, window.pageYOffset);
+
+  // get the the current height/width viewport
+  console.log(
+    "height/width viewport: ",
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+
+  //   window.pageXOffset -> return the scrollX property of the window interface return the number of pixel tha tthe document is currently scrolled horizontally.
+  // scrolling
+  //   window.scrollTo(s1Coords.left, s1Coords.top);
+  //   window.scrollTo(
+  //     s1Coords.left + window.pageXOffset,
+  //     s1Coords.top + window.pageYOffset
+  //   );
+
+  // fix that
+  //   window.scrollTo({
+  //     left: s1Coords.left + window.pageXOffset,
+  //     top: s1Coords.top + window.pageYOffset,
+  //     behavior: "smooth",
+  //   });
+
+  //   the modern way
+  section1.scrollIntoView({ behavior: "smooth" });
+});
