@@ -6,6 +6,12 @@ const modal = document.querySelector(".modal");
 const overlay = document.querySelector(".overlay");
 const btnCloseModal = document.querySelector(".btn--close-modal");
 const btnsOpenModal = document.querySelectorAll(".btn--show-modal");
+// select all tabs operation
+const operationTabs = document.querySelectorAll(".operations__tab");
+const tabsContainer = document.querySelector(".operations__tab-container");
+const tabsContent = document.querySelectorAll(".operations__content");
+const nav = document.querySelector(".nav");
+
 ///////////////////////////////////////
 // Modal window
 
@@ -67,9 +73,9 @@ document
 ///////////////////////// DOM TRAVERSING /////////////////////////
 const h1 = document.querySelector("h1");
 // going downward: child, get all childrens of the h1 element has class is hightlight
-console.log(h1.querySelectorAll(".highlight"));
-console.log(h1.childNodes); // return NodeList text, comment, span, ...
-console.log(h1.children); // return HTMLCollection
+// console.log(h1.querySelectorAll(".highlight"));
+// console.log(h1.childNodes); // return NodeList text, comment, span, ...
+// console.log(h1.children); // return HTMLCollection
 
 h1.firstElementChild.style.color = "blue";
 h1.lastElementChild.style.color = "red";
@@ -77,33 +83,99 @@ h1.lastElementChild.style.color = "red";
 // going upwards: parents
 
 // get the direct parent the closest parent
-console.log("h1.parentNode", h1.parentNode);
-console.log("h1.parentElement", h1.parentElement);
+// console.log("h1.parentNode", h1.parentNode);
+// console.log("h1.parentElement", h1.parentElement);
 
 // select the .header closest with h1 element
 // closest find the closest parent
 // querySelector find the closest children
-h1.closest(".header").style.background = "green";
+// h1.closest(".header").style.background = "green";
 
 // going sideways: siblings
-console.log(h1.previousElementSibling); // return: null (because the h1 is the first element of the its parent)
-console.log(h1.nextElementSibling);
-console.log(h1.previousSibling);
-console.log(h1.nextSibling);
+// console.log(h1.previousElementSibling); // return: null (because the h1 is the first element of the its parent)
+// console.log(h1.nextElementSibling);
+// console.log(h1.previousSibling);
+// console.log(h1.nextSibling);
 
 // how to get all siblings
-console.log("all children of h1: ", h1.parentElement.children);
+// console.log("all children of h1: ", h1.parentElement.children);
 
-console.log("type: ", typeof h1.parentElement.children);
+// console.log("type: ", typeof h1.parentElement.children);
 [...h1.parentElement.children].forEach(function (element) {
   if (element !== h1) {
-    console.log("not h1: ", element);
+    // console.log("not h1: ", element);
     element.style.transform = "scale(0.5)";
   }
 });
+
+// operationTabs.forEach((tab) =>
+//   tab.addEventListener("click", () => {
+//     console.log(`TAB`);
+//   })
+// );
+
+tabsContainer.addEventListener("click", (event) => {
+  const clicked = event.target.closest(".operations__tab");
+  console.log(clicked);
+  //   if the click from element that is null -> we will immediately return and complete the even handler function
+  // Guard clause
+  if (!clicked) {
+    return;
+  }
+  // Before make the current tab is active, we need to deactive all tab
+  operationTabs.forEach((tab) => {
+    tab.classList.remove("operations__tab--active");
+  });
+
+  // Remove the active content tab
+  tabsContent.forEach((content) =>
+    content.classList.remove("operations__content--active")
+  );
+
+  //   Activate operation tab
+  clicked.classList.add("operations__tab--active");
+  //   Activate content tab
+  document
+    .querySelector(`.operations__content--${clicked.dataset.tab}`)
+    .classList.add("operations__content--active");
+});
 ///////////////////////// ///////////////////////// /////////////////////////
 
-// Button scrolling
+///////////////////////// PASSING ARGUMENT TO EVENT HANDLER /////////////////////////
+// mouseover like mouseenter, but mouseenter does not have bubbling
+// when we hover to the link, all remain link is decrease opacity | menu face
+const handleHover = function (event) {
+  if (event.target.classList.contains("nav__link")) {
+    // select the target that event is happen on that element
+    const link = event.target;
+
+    // select all siblings
+    const siblings = link.closest(".nav").querySelectorAll(".nav__link");
+    const logo = link.closest(".nav").querySelector("img");
+
+    // change opacity of all siblings except the event.target
+    siblings.forEach((el) => {
+      if (el !== link) {
+        el.style.opacity = this;
+      }
+    });
+    // change the opacity of the logo element
+    logo.style.opacity = this;
+  }
+};
+
+// nav.addEventListener("mouseover", function (event) {
+//   handleHover(event, 0.5);
+// });
+// nav.addEventListener("mouseout", function (event) {
+//   handleHover(event, 1);
+// });
+
+// why is work. the bind method will assign this = 0.5 into the the handleHover function
+nav.addEventListener("mouseover", handleHover.bind(0.5));
+nav.addEventListener("mouseout", handleHover.bind(1));
+
+///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
   // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
   const s1Coords = section1.getBoundingClientRect();
@@ -158,11 +230,11 @@ Select, delete, and creating element
 
 */
 ///////////////////////// select the entire document, document is not enough for all element, because it's not the real DOM
-console.log(document.documentElement);
+// console.log(document.documentElement);
 
 // select head and body
-console.log(document.head);
-console.log(document.body);
+// console.log(document.head);
+// console.log(document.body);
 
 // select element with the class is header
 const header = document.querySelector(".header");
@@ -170,11 +242,11 @@ const header = document.querySelector(".header");
 // select all the elements have the class is `section`
 const allSections = document.querySelectorAll(".section");
 
-console.log(allSections); // return array of type: NodeList -> it's not realtime -> the result is just depend on the time when the select is execute, not update the value when the html page is changed
+// console.log(allSections); // return array of type: NodeList -> it's not realtime -> the result is just depend on the time when the select is execute, not update the value when the html page is changed
 
 const allButtons = document.getElementsByTagName("button"); // get all elements button tag: type: HTMLColection, when the html page is changed the result is updated also.
 
-console.log(allButtons);
+// console.log(allButtons);
 
 ///////////////////////// creating and inserting elements
 // we can use the .insertAdjacentHTML method
@@ -223,14 +295,14 @@ document.documentElement.style.setProperty("background-color", "red");
 
 // attribute
 const logo = document.querySelector(".nav__logo");
-console.log(logo.alt);
-console.log(logo.src);
-console.log(logo.className);
+// console.log(logo.alt);
+// console.log(logo.src);
+// console.log(logo.className);
 
 // Non-standar
-console.log(logo.designer);
+// console.log(logo.designer);
 
-console.log(logo.getAttribute("designer"));
+// console.log(logo.getAttribute("designer"));
 logo.setAttribute("company", "FPT");
 
 // data attribute
@@ -317,7 +389,7 @@ const randomInt = (min, max) =>
 const randomColor = (min = 0, max = 255) =>
   `rgb(${randomInt(min, max)}, ${randomInt(min, max)}, ${randomInt(min, max)})`;
 
-console.log("randomColor: ", randomColor());
+// console.log("randomColor: ", randomColor());
 
 /* document
   .querySelector(".nav__link")
