@@ -60,9 +60,48 @@ document
       // get the id of the target element
       const id = event.target.getAttribute("href");
       console.log(id);
-      id.scrollIntoView({ behavior: "smooth" });
+      document.querySelector(id).scrollIntoView({ behavior: "smooth" });
     }
   });
+
+///////////////////////// DOM TRAVERSING /////////////////////////
+const h1 = document.querySelector("h1");
+// going downward: child, get all childrens of the h1 element has class is hightlight
+console.log(h1.querySelectorAll(".highlight"));
+console.log(h1.childNodes); // return NodeList text, comment, span, ...
+console.log(h1.children); // return HTMLCollection
+
+h1.firstElementChild.style.color = "blue";
+h1.lastElementChild.style.color = "red";
+
+// going upwards: parents
+
+// get the direct parent the closest parent
+console.log("h1.parentNode", h1.parentNode);
+console.log("h1.parentElement", h1.parentElement);
+
+// select the .header closest with h1 element
+// closest find the closest parent
+// querySelector find the closest children
+h1.closest(".header").style.background = "green";
+
+// going sideways: siblings
+console.log(h1.previousElementSibling); // return: null (because the h1 is the first element of the its parent)
+console.log(h1.nextElementSibling);
+console.log(h1.previousSibling);
+console.log(h1.nextSibling);
+
+// how to get all siblings
+console.log("all children of h1: ", h1.parentElement.children);
+
+console.log("type: ", typeof h1.parentElement.children);
+[...h1.parentElement.children].forEach(function (element) {
+  if (element !== h1) {
+    console.log("not h1: ", element);
+    element.style.transform = "scale(0.5)";
+  }
+});
+///////////////////////// ///////////////////////// /////////////////////////
 
 // Button scrolling
 btnScrollTo.addEventListener("click", function (event) {
