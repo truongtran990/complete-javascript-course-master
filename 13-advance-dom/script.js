@@ -176,6 +176,84 @@ nav.addEventListener("mouseover", handleHover.bind(0.5));
 nav.addEventListener("mouseout", handleHover.bind(1));
 
 ///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// STICKY NAVIGATION /////////////////////////
+// const initialCoords = section1.getBoundingClientRect();
+// console.log(initialCoords);
+// // use the scroll is the bad idea for performance, we will enhance it
+// window.addEventListener("scroll", function () {
+//   //   console.log(window.screenY);
+//   //   console.log(initialCoords.top);
+//   if (window.scrollY > initialCoords.top) {
+//     nav.classList.add("sticky");
+//   } else {
+//     nav.classList.remove("sticky");
+//   }
+// });
+
+///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// STICKY NAVIGATION V2 /////////////////////////
+
+// entries: the threshold entries
+
+// const observeOptions = {
+//   // first is needed a root property, and the root element is the target is intersecting
+//   // if the root is null, we will observer intersecting the entire viewport
+//   root: null,
+//   threshold: 0.1, // the percentage of intersection which the observer callbackFunc will be called, in the other hand, the % of the target element visible in the viewport
+// };
+
+// const observeCallbackFun = function (entries, observer) {
+//   entries.forEach((entry) => {
+//     console.log(entry);
+//   });
+// };
+
+// const observer = new IntersectionObserver(observeCallbackFun, observeOptions);
+// observer.observe(section1);
+
+const header = document.querySelector(".header");
+const stickyNav = (entries, observer) => {
+  console.log("entries: ", entries);
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) {
+    nav.classList.add("sticky");
+  } else {
+    nav.classList.remove("sticky");
+  }
+};
+
+const observer = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+});
+observer.observe(header);
+
+///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// REVEALING ELEMENTS ON SCROLL /////////////////////////
+
+const allSections = document.querySelectorAll(".section");
+
+const revealSection = function (entries, observer) {
+  const entry = [entries];
+  entries.forEach((entry) => {
+    if (!entry.isIntersecting) return;
+    console.log("entry for reveal ", entry);
+    entry.target.classList.remove("section--hidden");
+    observer.unobserve(entry.target);
+  });
+};
+
+const sectionObserver = new IntersectionObserver(revealSection, {
+  root: null,
+  threshold: 0.15,
+});
+
+allSections.forEach((section) => {
+  sectionObserver.observe(section);
+  section.classList.add("section--hidden");
+});
+///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
   // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
   const s1Coords = section1.getBoundingClientRect();
@@ -237,10 +315,10 @@ Select, delete, and creating element
 // console.log(document.body);
 
 // select element with the class is header
-const header = document.querySelector(".header");
+// const header = document.querySelector(".header");
 
 // select all the elements have the class is `section`
-const allSections = document.querySelectorAll(".section");
+// const allSections = document.querySelectorAll(".section");
 
 // console.log(allSections); // return array of type: NodeList -> it's not realtime -> the result is just depend on the time when the select is execute, not update the value when the html page is changed
 
@@ -271,20 +349,20 @@ message.innerHTML =
 // the message is the realtime, so it just insert into one place at the same time
 // but if you want to insert two or multiple element of the same element?
 // header.append(message.cloneNode(true));
-header.append(message);
+// header.append(message);
 
 // insert before header element
 // header.before(message);
 // header.after(message);
 
 ////////////////////////////// Delete element
-document
-  .querySelector(".btn--close-cookie")
-  .addEventListener("click", function () {
-    // message.remove();
-    // the old way to remove message element
-    message.parentElement.removeChild(message);
-  });
+// document
+//   .querySelector(".btn--close-cookie")
+//   .addEventListener("click", function () {
+//     // message.remove();
+//     // the old way to remove message element
+//     message.parentElement.removeChild(message);
+//   });
 
 // styles
 message.style.backgroundColor = "#37383d";
