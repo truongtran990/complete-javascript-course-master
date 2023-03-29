@@ -301,66 +301,113 @@ targetImgs.forEach((image) => {
 ///////////////////////// ///////////////////////// /////////////////////////
 ///////////////////////// SLIDER COMPONENT /////////////////////////
 
-// Get all slide images
-const imgSlides = document.querySelectorAll(".slide");
+const slider = function () {
+  // Get all slide images
+  const imgSlides = document.querySelectorAll(".slide");
 
-// get the slider that contains all slide images
-const slider = document.querySelector(".slider");
+  // // get the slider that contains all slide images
+  // const slider = document.querySelector(".slider");
 
-// get the left, right button
-const btnLeft = document.querySelector(".slider__btn--left");
-const btnRight = document.querySelector(".slider__btn--right");
+  // // scale out that make image is smaller and shift to left 1000px to ease to view
+  // slider.style.transform = "scale(0.3) translateX(-1000px)";
 
-let currentSlide = 0;
+  // // slider is relative display, and all the image slides is absolute, so all the images are on top of each other, so we can only see the one images. the see all, we change the overflow to visible
+  // slider.style.overflow = "visible";
+  // // slider.style.transform = translateX
 
-const sizeOfSlides = imgSlides.length;
+  // get the left, right button
+  const btnLeft = document.querySelector(".slider__btn--left");
+  const btnRight = document.querySelector(".slider__btn--right");
+  const dotContainer = document.querySelector(".dots");
+  let currentSlide = 0;
+  const sizeOfSlides = imgSlides.length;
 
-// scale out that make image is smaller and shift to left 1000px to ease to view
-slider.style.transform = "scale(0.3) translateX(-1000px)";
+  const createDots = function () {
+    imgSlides.forEach(function (_, index) {
+      dotContainer.insertAdjacentHTML(
+        "beforeend",
+        `<button class="dots__dot" data-slide=${index}></button>`
+      );
+    });
+  };
 
-// slider is relative display, and all the image slides is absolute, so all the images are on top of each other, so we can only see the one images. the see all, we change the overflow to visible
-slider.style.overflow = "visible";
-// slider.style.transform = translateX
+  const activateDot = function (slide) {
+    document
+      .querySelectorAll(".dots__dot")
+      .forEach((dot) => dot.classList.remove("dots__dot--active"));
 
-const goToSlide = function (slide) {
-  // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
-  imgSlides.forEach(
-    (img, index) =>
-      (img.style.transform = `translateX(${100 * (index - slide)}%)`)
-  );
+    document
+      .querySelector(`.dots__dot[data-slide="${slide}"]`)
+      .classList.add("dots__dot--active");
+  };
+
+  const goToSlide = function (slide) {
+    // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
+    imgSlides.forEach(
+      (img, index) =>
+        (img.style.transform = `translateX(${100 * (index - slide)}%)`)
+    );
+  };
+
+  const nextSlide = function () {
+    if (currentSlide === sizeOfSlides - 1) {
+      currentSlide = 0;
+    } else {
+      currentSlide++;
+    }
+
+    // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
+    goToSlide(currentSlide);
+    activateDot(currentSlide);
+  };
+
+  const previousSlide = function () {
+    if (currentSlide === 0) {
+      currentSlide = sizeOfSlides - 1;
+    } else {
+      currentSlide--;
+    }
+
+    // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
+    goToSlide(currentSlide);
+    activateDot(currentSlide);
+  };
+
+  const init = function () {
+    goToSlide(0);
+    createDots();
+    activateDot(0);
+  };
+  init();
+
+  // go to next slide
+  btnRight.addEventListener("click", nextSlide);
+
+  // go to previous slide
+  btnLeft.addEventListener("click", previousSlide);
+
+  // using the left and right arrow to move image slide
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowLeft") {
+      previousSlide();
+    }
+    event.key === "ArrowRight" && nextSlide();
+  });
+
+  ///////////////////////// ///////////////////////// /////////////////////////
+  ///////////////////////// CLICK DOT TO MOVE TO IMAGE SLIDE /////////////////////////
+  dotContainer.addEventListener("click", function (event) {
+    if (event.target.classList.contains("dots__dot")) {
+      console.log("DOT");
+      // get the slide
+      const { slide } = event.target.dataset;
+      goToSlide(slide);
+      activateDot(slide);
+    }
+  });
 };
 
-const nextSlide = function () {
-  if (currentSlide === sizeOfSlides - 1) {
-    currentSlide = 0;
-  } else {
-    currentSlide++;
-  }
-
-  // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
-  goToSlide(currentSlide);
-};
-
-const previousSlide = function () {
-  if (currentSlide === 0) {
-    currentSlide = sizeOfSlides - 1;
-  } else {
-    currentSlide--;
-  }
-
-  // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
-  goToSlide(currentSlide);
-};
-
-// 0%, 100%, 200%, 300%
-goToSlide(0);
-
-// go to next slide
-btnRight.addEventListener("click", nextSlide);
-
-// go to previous slide
-btnLeft.addEventListener("click", previousSlide);
-
+slider();
 ///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
   // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
