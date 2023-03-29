@@ -235,24 +235,69 @@ observer.observe(header);
 const allSections = document.querySelectorAll(".section");
 
 const revealSection = function (entries, observer) {
-  const entry = [entries];
+  // Function handle the entry which was observered
   entries.forEach((entry) => {
     if (!entry.isIntersecting) return;
-    console.log("entry for reveal ", entry);
     entry.target.classList.remove("section--hidden");
     observer.unobserve(entry.target);
   });
 };
 
+// Define new intersec observer object
 const sectionObserver = new IntersectionObserver(revealSection, {
-  root: null,
-  threshold: 0.15,
+  root: null, // the entire viewport
+  threshold: 0.15, // 15% of the targe object intersect with the viewport
 });
 
 allSections.forEach((section) => {
+  // add observer for each section element in the html page
   sectionObserver.observe(section);
   section.classList.add("section--hidden");
 });
+
+///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// LAZY LOADING IMAGES /////////////////////////
+
+/* One the biggest measure when building website is performance. And the images
+have the biggest impact on page loading. 
+And optimized for images loading is very important. And the lazy load is comming
+*/
+// select all images that have the data-src attribute
+
+const targetImgs = document.querySelectorAll("img[data-src]"); //return NodeList
+
+const loadingImgs = (entries, observer) => {
+  console.log(entries);
+  entries.forEach((entry) => {
+    // if isIntersecting -> change the src to Src data attribute and remove the lazy-img class from classList
+    if (!entry.isIntersecting) {
+      return;
+    }
+    entry.target.src = entry.target.dataset.src;
+
+    // this is not the good idea, because sometime, the network is too slow and then the image is take a long time to load. what is the image will show on the page. The lazy-image is still there until the new image is loading successfully and replace it.
+    // to make suke blue alway there until the load image event is totally completed, and after that we will remove the blur class
+    // entry.target.classList.remove("lazy-img");
+
+    entry.target.addEventListener("load", () => {
+      entry.target.classList.remove("lazy-img");
+    });
+    // remove this entry from observer intersecting
+    observer.unobserve(entry.target);
+  });
+};
+
+const imgObserver = new IntersectionObserver(loadingImgs, {
+  root: null,
+  threshold: 0,
+  //   to make the image load before the threshold is reached, we will add the rootMargin with negative value
+  rootMargin: "200px",
+});
+
+targetImgs.forEach((image) => {
+  imgObserver.observe(image);
+});
+
 ///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
   // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
