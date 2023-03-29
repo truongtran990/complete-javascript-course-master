@@ -252,7 +252,7 @@ const sectionObserver = new IntersectionObserver(revealSection, {
 allSections.forEach((section) => {
   // add observer for each section element in the html page
   sectionObserver.observe(section);
-  section.classList.add("section--hidden");
+  //   section.classList.add("section--hidden");
 });
 
 ///////////////////////// ///////////////////////// /////////////////////////
@@ -297,6 +297,69 @@ const imgObserver = new IntersectionObserver(loadingImgs, {
 targetImgs.forEach((image) => {
   imgObserver.observe(image);
 });
+
+///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// SLIDER COMPONENT /////////////////////////
+
+// Get all slide images
+const imgSlides = document.querySelectorAll(".slide");
+
+// get the slider that contains all slide images
+const slider = document.querySelector(".slider");
+
+// get the left, right button
+const btnLeft = document.querySelector(".slider__btn--left");
+const btnRight = document.querySelector(".slider__btn--right");
+
+let currentSlide = 0;
+
+const sizeOfSlides = imgSlides.length;
+
+// scale out that make image is smaller and shift to left 1000px to ease to view
+slider.style.transform = "scale(0.3) translateX(-1000px)";
+
+// slider is relative display, and all the image slides is absolute, so all the images are on top of each other, so we can only see the one images. the see all, we change the overflow to visible
+slider.style.overflow = "visible";
+// slider.style.transform = translateX
+
+const goToSlide = function (slide) {
+  // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
+  imgSlides.forEach(
+    (img, index) =>
+      (img.style.transform = `translateX(${100 * (index - slide)}%)`)
+  );
+};
+
+const nextSlide = function () {
+  if (currentSlide === sizeOfSlides - 1) {
+    currentSlide = 0;
+  } else {
+    currentSlide++;
+  }
+
+  // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
+  goToSlide(currentSlide);
+};
+
+const previousSlide = function () {
+  if (currentSlide === 0) {
+    currentSlide = sizeOfSlides - 1;
+  } else {
+    currentSlide--;
+  }
+
+  // 0%, 100%, 200%, 300% -> -100%, 0%, 200%, 300%
+  goToSlide(currentSlide);
+};
+
+// 0%, 100%, 200%, 300%
+goToSlide(0);
+
+// go to next slide
+btnRight.addEventListener("click", nextSlide);
+
+// go to previous slide
+btnLeft.addEventListener("click", previousSlide);
 
 ///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
@@ -414,7 +477,7 @@ message.style.backgroundColor = "#37383d";
 message.style.width = "120%";
 
 // .style only work for inline style, if you try to adit another style attribute like height -> show nothing
-document.documentElement.style.setProperty("background-color", "red");
+// document.documentElement.style.setProperty("background-color", "red");
 
 // attribute
 const logo = document.querySelector(".nav__logo");
