@@ -409,6 +409,28 @@ const slider = function () {
 
 slider();
 ///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// LIFECYCLE DOM EVENTS /////////////////////////
+
+// add event listener when the html is loaded to the DOM tree completed
+// just html code, not the static file like images, ...
+document.addEventListener("DOMContentLoaded", function (event) {
+  console.log("DOMContentLoaded successfully", event);
+});
+
+// when we work with jQuery, maybe you need to add all the code inside the ready function like below:
+window.addEventListener("load", function (event) {
+  // html, js, media file like image is loaded
+  console.log("Page fully loaded.", event);
+});
+
+// event when the user click exit browser
+window.addEventListener("beforeunload", function (event) {
+  event.preventDefault();
+  console.log("Before unload!");
+  event.returnValue = "";
+});
+
+///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
   // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
   const s1Coords = section1.getBoundingClientRect();
