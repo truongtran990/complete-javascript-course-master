@@ -431,6 +431,17 @@ window.addEventListener("beforeunload", function (event) {
 });
 
 ///////////////////////// ///////////////////////// /////////////////////////
+///////////////////////// EFFICIENT SCRIPT LOADING /////////////////////////
+
+// regular
+// <script scr="script.js"></script>
+
+// async
+// <script async src="script.js"></script>
+
+// defer
+// <script defer src="script.js"></script>
+///////////////////////// ///////////////////////// /////////////////////////
 btnScrollTo.addEventListener("click", function (event) {
   // return a DOMRect oject providing information about the size of an element and its position relative to the viewport of the target element which you want to scroll it to
   const s1Coords = section1.getBoundingClientRect();
