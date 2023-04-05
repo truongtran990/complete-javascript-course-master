@@ -10,6 +10,19 @@
 
 // 4. Create a new car and experiment with the 'accelerate' and 'brake'
 // methods, and with the getter and setter
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.brake = function (args = 5) {
+  this.speed -= args;
+  console.log("new speed: ", this.speed);
+};
+Car.prototype.accelerate = function (args = 10) {
+  this.speed += args;
+  console.log("Car - new speed: ", this.speed);
+};
 
 class CarClass {
   constructor(make, speed) {
@@ -40,6 +53,49 @@ const dataTest1 = new CarClass("Ford", 120);
 // 1. Use a constructor function to implement an Electric Car (called 'EV') as a child
 // "class" of 'Car'. Besides a make and current speed, the 'EV' also has the
 // current battery charge in % ('charge' property)
+
+/* 
+const Car = function (make, speed) {
+  this.make = make;
+  this.speed = speed;
+};
+
+Car.prototype.brake = function (args = 5) {
+  this.speed -= args;
+  console.log("new speed: ", this.speed);
+};
+Car.prototype.accelerate = function (args = 10) {
+  this.speed += args;
+  console.log("Car - new speed: ", this.speed);
+};
+  
+*/
+const EV = function (make, speed, charge) {
+  Car.call(this, make, speed);
+  this.charge = charge;
+};
+
+EV.prototype = Object.create(Car.prototype);
+EV.prototype.chargeBattery = function (chargeTo) {
+  this.charge = chargeTo;
+  console.log("charge after call chargeTo: ", this.charge);
+};
+
+EV.prototype.accelerate = function (speedIncrease = 20, chargeDecrease = 1) {
+  this.speed += speedIncrease;
+  this.charge -= chargeDecrease;
+  console.log(
+    `EV - ${this.make} going at ${this.speed} km/h, with a charge of ${this.charge}%`
+  );
+};
+
+const electricCar = new EV("Tesla", 120, 23);
+
+electricCar.accelerate();
+electricCar.brake();
+electricCar.chargeBattery(90);
+
+console.log(EV.prototype);
 // 2. Implement a 'chargeBattery' method which takes an argument
 // 'chargeTo' and sets the battery charge to 'chargeTo'
 // 3. Implement an 'accelerate' method that will increase the car's speed by 20,
