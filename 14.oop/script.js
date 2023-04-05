@@ -204,3 +204,54 @@ console.log(
   mike instanceof Object
 );
 Student.prototype.constructor = Student;
+
+class StudentClass extends Person {
+  constructor(fullName, birthYear, course) {
+    // supper call the constructor function of the parrent constructor
+    // alway the supper function is called first
+    // initial this object
+    super(fullName, birthYear);
+    this.course = course;
+  }
+
+  introduce() {
+    console.log(`My name is ${this.firstName} and I study ${this.course}`);
+  }
+}
+
+const martha = new StudentClass("Martha Jones", 2012, "Computer science");
+// const martha = new StudentClass("Martha Jones", 2012);
+
+martha.introduce();
+
+/* 
+///////////////////////////////// INHERITANCE IN OBJECT.CREATE
+*/
+const PersonPrototype2 = {
+  calcAge() {
+    console.log(2023 - this.birthYear);
+  },
+
+  init(firstName, birthYear) {
+    this.firstName = firstName;
+    this.birthYear = birthYear;
+  },
+};
+
+const steven = Object.create(PersonPrototype2);
+
+const StudentPrototype = Object.create(PersonPrototype2);
+
+StudentPrototype.init = function (firstName, birthYear, course) {
+  PersonPrototype2.init.call(this, firstName, birthYear);
+  this.course = course;
+};
+
+StudentPrototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and I'am learning ${this.course}`);
+};
+
+const jay = Object.create(StudentPrototype);
+jay.init("Jay Jay", 2010, "Computer Science");
+jay.introduce();
+jay.calcAge();
