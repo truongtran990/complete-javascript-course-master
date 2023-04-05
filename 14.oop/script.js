@@ -160,3 +160,47 @@ console.log(truong3.__proto__ === PersonPrototype);
 const truong4 = Object.create(PersonPrototype);
 truong4.init("Truong Tran 4", 2000);
 truong4.calcAge();
+
+/* 
+///////////////////////////// Inheritance between "Classes"/ Constructor functions
+*/
+const Student = function (firstName, birthYear, course) {
+  // this.firstName = firstName;
+  // this.birthYear = birthYear;
+  // we will use the call method to set the this object for this of the Student class
+  Person.call(this, firstName, birthYear);
+  // this.__proto__ = Person.prototype;
+  this.course = course;
+};
+
+// Linking prototypes
+Student.prototype = Object.create(Person.prototype);
+/* 
+If you use Student.prototype = Person.prototype should be the exactly the same object
+*/
+
+Student.prototype.introduce = function () {
+  console.log(`My name is ${this.firstName} and I'm learning ${this.course}`);
+};
+
+const mike = new Student("Mike", 2000, "Computer Science");
+console.log("mike: ", mike);
+mike.introduce();
+// mike.calcAge();
+
+console.log(mike.__proto__);
+console.log(mike.__proto__.__proto__);
+
+console.log(
+  "check instance of mike vs Student before changes: ",
+  mike instanceof Student
+);
+console.log(
+  "check instance of mike vs Person before changes: ",
+  mike instanceof Person
+);
+console.log(
+  "check instance of mike vs Object before changes: ",
+  mike instanceof Object
+);
+Student.prototype.constructor = Student;
