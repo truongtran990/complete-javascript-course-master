@@ -255,3 +255,55 @@ const jay = Object.create(StudentPrototype);
 jay.init("Jay Jay", 2010, "Computer Science");
 jay.introduce();
 jay.calcAge();
+
+/* 
+///////////////////////// ANOTHER CLASS
+*/
+
+// public fields
+// private fields
+// public methods
+// private methods
+class Account {
+  // public fields: nothing to do, because the default is public
+  // private fields
+  /* 
+    define the private fields outside of the constructor function. and add the # prefix in the method like this
+    #greet
+    and set the value of the greet in the constructor function
+  */
+  // public methods
+  // private methods
+  constructor(owner, currency, pin) {
+    this.owner = owner;
+    this.currency = currency;
+    this.pin = pin;
+    this.movements = [];
+    this.locate = navigator.language;
+    console.log(`Thanks for opening an account: ${this.movements}`);
+  }
+
+  deposit(value) {
+    this.movements.push(value);
+  }
+
+  withdraw(value) {
+    this.deposit(-value);
+  }
+}
+
+const acc1 = new Account("Truong Tran v3", "EUR", 100);
+console.log(acc1);
+
+acc1.movements.push(250);
+acc1.movements.push(-250);
+
+acc1.withdraw(140);
+acc1.deposit(250);
+console.log(acc1);
+
+/* 
+private properties
+if you want to protect properties from outside of the class to prevent modidi or access from outside. the convention is add the _ in the prefix of the properties like this
+class ProtectCl {constructor(a){this._a = a}}
+*/

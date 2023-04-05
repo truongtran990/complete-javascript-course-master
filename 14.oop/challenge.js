@@ -36,6 +36,7 @@ class CarClass {
   brake(args = 5) {
     this.speed -= args;
     console.log("new speed: ", this.speed);
+    return this;
   }
   set speedUS(ratio = 1.6) {
     this.speed *= ratio;
@@ -104,3 +105,40 @@ console.log(EV.prototype);
 // 4. Create an electric car object and experiment with calling 'accelerate',
 // 'brake' and 'chargeBattery' (charge to 90%). Notice what happens when
 // you 'accelerate'! Hint: Review the definiton of polymorphism 😉
+
+// 1. Re-create Challenge #3, but this time using ES6 classes: create an 'EVCl'
+// child class of the 'CarCl' class
+
+class EVCl extends CarClass {
+  #charge;
+
+  constructor(make, speed, charge) {
+    super(make, speed);
+    this.#charge = charge;
+  }
+
+  chargeBattery(chargeTo) {
+    this.#charge = chargeTo;
+    console.log("charge after call chargeTo: ", this.#charge);
+    return this;
+  }
+
+  accelerate(speedIncrease = 20, chargeDecrease = 1) {
+    this.speed += speedIncrease;
+    this.#charge -= chargeDecrease;
+    console.log(
+      `EV - ${this.make} going at ${this.speed} km/h, with a charge of ${
+        this.#charge
+      }%`
+    );
+    return this;
+  }
+}
+
+// 2. Make the 'charge' property private
+// 3. Implement the ability to chain the 'accelerate' and 'chargeBattery'
+// methods of this class, and also update the 'brake' method in the 'CarCl'
+// class. Then experiment with chaining!
+const newEVCL = new EVCl("Rivian", 120, 23);
+newEVCL.accelerate().chargeBattery(20).brake();
+console.log(newEVCL);
