@@ -18,7 +18,7 @@ const inputCadence = document.querySelector(".form__input--cadence");
 const inputElevation = document.querySelector(".form__input--elevation");
 
 // before handle function, check it exists
-if (navigator?.geolocation) {
+if (navigator.geolocation) {
   navigator.geolocation.getCurrentPosition(
     function (position) {
       //   console.log("position: ", position);
@@ -37,10 +37,29 @@ if (navigator?.geolocation) {
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       }).addTo(map);
 
-      L.marker(coords)
-        .addTo(map)
-        .bindPopup("A pretty CSS3 popup.<br> Easily customizable.")
-        .openPopup();
+      map?.on("click", function (mapEvent) {
+        console.log(mapEvent);
+        const { lat: currentLatitude, lng: currentLogitude } = mapEvent.latlng;
+
+        // add the current mouse click address to map
+        L.marker([currentLatitude, currentLogitude])
+          .addTo(map)
+          //   binds a popup to the layer with the passed content
+          .bindPopup(
+            // a new popup instance
+            L.popup({
+              maxWidth: 250,
+              maxHeight: 50,
+              //   set to false if you want to do not close the popup when another popup is opened
+              autoClose: false,
+              //    set to false if you want to do not close the popup when use clicks on the map
+              closeOnClick: false,
+              className: "running-popup",
+            })
+          )
+          .setPopupContent("Workout")
+          .openPopup();
+      });
     },
     function () {
       alert("Could not get your position");
