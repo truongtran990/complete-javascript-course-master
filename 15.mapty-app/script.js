@@ -86,9 +86,6 @@ class Cycling extends Workout {
 // const run1 = new Running([1, 2], 10, 1, 10);
 // const cycle1 = new Cycling([1, 2], 20, 2, 20);
 
-// console.log(run1);
-// console.log(cycle1);
-
 // APPLICATION ARCHITECTURE
 class App {
   // to keep the properties private
@@ -99,12 +96,15 @@ class App {
 
   // the constructor function will be called asap when the new object is created
   constructor() {
-    // load the map based on the current position when the new object is created
+    // Load the map based on the current position when the new object is created
     this._getPosition();
 
-    // as you can see, there are 2 varialbe: map and mapEvent does not exists
-    // so we need create a global variable to store 2 variables
-    // the submit event with form element will trigger when any input element is enter key is press
+    // Get data from localstorage
+    this._getLocalStorage();
+
+    // As you can see, there are 2 varialbe: map and mapEvent does not exists
+    // So we need create a global variable to store 2 variables
+    // The submit event with form element will trigger when any input element is enter key is press
     form.addEventListener("submit", this._newWorkout.bind(this));
 
     inputType.addEventListener("change", this._toggleElevationField);
@@ -113,7 +113,6 @@ class App {
   }
 
   _getPosition() {
-    console.log("this in _getPosotion", this);
     // before handle function, check it exists
     if (navigator.geolocation) {
       // this._loadMap is call as a callback function in the getCurrentPosition in leaflef. indeed, this function is called as regular function, not is the method called.
@@ -130,14 +129,11 @@ class App {
   }
 
   _loadMap(position) {
-    //   console.log("position: ", position);
     // get the longitude and latitude value
     const { latitude, longitude } = position.coords;
-    console.log(`${MAP_BASE_URL}@${latitude},${longitude},${DEFAULT_MAP_ZOOM}`);
 
     const coords = [latitude, longitude];
 
-    console.log("this at _loadMap", this);
     //   assign map variable
     this.#map = L.map("map").setView(coords, 13);
 
@@ -147,6 +143,11 @@ class App {
     }).addTo(this.#map);
 
     this.#map?.on("click", this._showForm.bind(this));
+
+    // Render the marker from local storage
+    this.#workouts.forEach((work) => {
+      this._renderWorkoutMarker(work);
+    });
   }
 
   _showForm(mapE) {
@@ -180,7 +181,6 @@ class App {
   _newWorkout(event) {
     // input is the array and when call validInputs pass argument as many as you want
     const validInputs = (...inputs) => {
-      console.log(inputs);
       return inputs.every((inp) => Number.isFinite(inp));
     };
 
@@ -192,11 +192,9 @@ class App {
 
     // Get data from form
     const type = inputType.value;
-    console.log(type);
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
     // Render workout on maps as marker
-    console.log("this.#mapEvent", this.#mapEvent.latlng);
     const { lat: currentLatitude, lng: currentLogitude } =
       this.#mapEvent.latlng;
     let workout;
@@ -240,7 +238,6 @@ class App {
         elevation
       );
     }
-    console.log(workout);
 
     // Add new object to workout array
     this.#workouts.push(workout);
@@ -249,12 +246,13 @@ class App {
     this._renderWorkoutMarker(workout);
 
     // Render workout on list
-    this._renderWorkouts(workout);
+    this._renderWorkout(workout);
 
     // Hide form and clear input fields before input them
     this._hideForm();
 
-    console.log("this at _newWorkout", this.#mapEvent);
+    // Set local storage to all workouts
+    this._setLocalStorage();
   }
 
   _renderWorkoutMarker(workout) {
@@ -279,7 +277,7 @@ class App {
       .openPopup();
   }
 
-  _renderWorkouts(workout) {
+  _renderWorkout(workout) {
     let htmlWorkout = `
       <li class="workout workout--${workout.type}" data-id="${workout.id}">
         <h2 class="workout__title">${workout.description}</h2>
@@ -303,7 +301,7 @@ class App {
             <span class="workout__icon">⚡️</span>
             <span class="workout__value">${workout.pace.toFixed(1)}</span>
             <span class="workout__unit">min/km</span>
-          </div>
+          </div>k
           <div class="workout__details">
             <span class="workout__icon">🦶🏼</span>
             <span class="workout__value">${workout.cadence}</span>
@@ -333,9 +331,7 @@ class App {
   }
 
   _moveToPopup(event) {
-    console.log(event.target);
     const workoutEl = event.target.closest(".workout");
-    console.log("workoutEl", workoutEl);
 
     if (!workoutEl) {
       return;
@@ -343,7 +339,6 @@ class App {
     const workout = this.#workouts.find(
       (work) => work.id === workoutEl.dataset.id
     );
-    console.log(workout);
 
     this.#map.setView(workout.coords, this.#DEFAULT_MAP_ZOOM, {
       animate: true,
@@ -353,7 +348,30 @@ class App {
     });
 
     // using the public interface
-    workout.click();
+    // workout.click();
+  }
+
+  // Set local storage to all workouts
+  _setLocalStorage() {
+    localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+  }
+
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem("workouts"));
+
+    if (!data) return;
+
+    this.#workouts = data;
+
+    this.#workouts.forEach((work) => {
+      this._renderWorkout(work);
+    });
+  }
+
+  reset() {
+    localStorage.removeItem("workouts");
+
+    location.reload();
   }
 }
 
