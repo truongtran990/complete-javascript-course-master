@@ -48,7 +48,7 @@ const countriesContainer = document.querySelector(".countries");
 
 ///////////////////////////////////////////// XMLHttpRequest /////////////////////////////////////////////
 
-const getCountryData = function (countryName) {
+/* const getCountryData = function (countryName) {
   const request = new XMLHttpRequest();
   request.open("GET", `${BASE_CONTRIES_URL}name/${countryName}`);
 
@@ -85,6 +85,74 @@ const getCountryData = function (countryName) {
   });
 };
 
+// With XMLHttpRequest, if any request have the response first -> it will render the data to the html page, and don't care about the order of what function is called like we call portugal first and use is second and vietname is the last.
 getCountryData("portugal");
 getCountryData("usa");
-getCountryData("vietnam");
+getCountryData("vietnam"); */
+
+const renderCountry = function (data, className = "") {
+  const html = `
+    <article class="country ${className}">
+        <img class="country__img" src="${data?.flags?.svg}" />
+        <div class="country__data">
+            <h3 class="country__name">${
+              data?.name?.common || data?.name?.official
+            }</h3>
+            <h4 class="country__region">${data?.region}</h4>
+            <p class="country__row"><span>👫</span>${(
+              +data?.population / 1000000
+            ).toFixed(1)}</p>
+            <p class="country__row"><span>🗣️</span>${
+              Object.values(data?.languages)[0]
+            }</p>
+            <p class="country__row"><span>💰</span>${
+              Object.keys(data?.currencies)[0]
+            }</p>
+        </div>
+    </article>
+  `;
+
+  // beforeend or afterbegin will insert new element in the same element
+  countriesContainer.insertAdjacentHTML("beforeend", html);
+  if (countriesContainer.style.opacity !== 1)
+    countriesContainer.style.opacity = 1;
+};
+
+const getCountryAndNeighbour = function (countryName) {
+  // AJAX call country 1
+  const request = new XMLHttpRequest();
+  request.open("GET", `${BASE_CONTRIES_URL}name/${countryName}`);
+
+  request.send();
+
+  request.addEventListener("load", function () {
+    const [data] = JSON.parse(this.responseText);
+    console.log(data);
+
+    // Render country 1 data to html page
+    renderCountry(data);
+
+    // Get neighbour country 2
+    const neighbour = data.borders?.[0];
+
+    if (!neighbour) {
+      return;
+    }
+
+    // AJAX call country 2
+    const request2 = new XMLHttpRequest();
+    request2.open("GET", `${BASE_CONTRIES_URL}alpha/${neighbour}`);
+
+    request2.send();
+
+    request2.addEventListener("load", function () {
+      const [data2] = JSON.parse(this.responseText);
+      console.log(data2);
+
+      // Render country 2 data to html page
+      renderCountry(data2, "neighbour");
+    });
+  });
+};
+
+getCountryAndNeighbour("usa");
