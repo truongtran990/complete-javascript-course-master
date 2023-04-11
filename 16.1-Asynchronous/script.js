@@ -90,6 +90,11 @@ getCountryData("portugal");
 getCountryData("usa");
 getCountryData("vietnam"); */
 
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentText("beforeend", msg);
+  //   countriesContainer.style.opacity = 1;
+};
+
 const renderCountry = function (data, className = "") {
   const html = `
     <article class="country ${className}">
@@ -114,8 +119,8 @@ const renderCountry = function (data, className = "") {
 
   // beforeend or afterbegin will insert new element in the same element
   countriesContainer.insertAdjacentHTML("beforeend", html);
-  if (countriesContainer.style.opacity !== 1)
-    countriesContainer.style.opacity = 1;
+  //   if (countriesContainer.style.opacity !== 1)
+  //     countriesContainer.style.opacity = 1;
 };
 
 /* const getCountryAndNeighbour = function (countryName) {
@@ -199,12 +204,38 @@ What is the promise?
 //     });
 // };
 
+// The then() method alway return a promise
 const getCountryData = function (country) {
-  // Immediately return a promise
+  // Country 1
+  //   The fetch promise only reject when there is no connection, the status code is 404, the fetch promise will still get fulfulled, no rejected.
   fetch(`${BASE_CONTRIES_URL}name/${country}`)
+    .then(
+      // The first callback function in .then() method for the fulfilled promised
+      (response) => response.json()
+      // The second callback function is for the rejected
+    )
+    .then((data) => {
+      renderCountry(data?.[0]);
+      const neighbour = data[0]?.borders?.[0];
+      if (!neighbour) {
+        return "Neighbour does not exists";
+      }
+      //   Country 2
+      return fetch(`${BASE_CONTRIES_URL}alpha/${neighbour}`);
+    })
     .then((response) => response.json())
-    .then((data) => renderCountry(data[0]));
+    .then((data) => renderCountry(data[0], "neighbour"))
+    .catch((error) => {
+      console.error(`${error} ✴✴✴`);
+      renderError(`Something went wrong ✴✴✴ ${error.message}. Try again!`);
+    })
+
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
 };
 
-let countryName = "vietnam";
-getCountryData(countryName);
+let countryName = "germany1";
+btn.addEventListener("click", function () {
+  getCountryData(countryName);
+});
