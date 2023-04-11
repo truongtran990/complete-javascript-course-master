@@ -118,7 +118,7 @@ const renderCountry = function (data, className = "") {
     countriesContainer.style.opacity = 1;
 };
 
-const getCountryAndNeighbour = function (countryName) {
+/* const getCountryAndNeighbour = function (countryName) {
   // AJAX call country 1
   const request = new XMLHttpRequest();
   request.open("GET", `${BASE_CONTRIES_URL}name/${countryName}`);
@@ -153,6 +153,58 @@ const getCountryAndNeighbour = function (countryName) {
       renderCountry(data2, "neighbour");
     });
   });
+}; */
+
+// getCountryAndNeighbour("usa");
+
+// const request = new XMLHttpRequest();
+// request.open("GET", `${BASE_CONTRIES_URL}name/${countryName}`);
+// request.send();
+
+///////////////////////////////////////////// PROMISES /////////////////////////////////////////////
+/* 
+What is the promise?
+    An object that is used as a placeholder for the future result of an asynchronous operation.
+
+    Or
+
+    A container for an asynchronous delivered value.
+
+    Or
+
+    A container for a future value (Response for AJAX call)
+*/
+
+// const getCountryData = function (country) {
+//   // Immediately return a promise
+//   fetch(`${BASE_CONTRIES_URL}name/${countryName}`)
+//     /* All the promise can call the .then() method
+//         In the then method, we need to add the callback function that we want to be executed as soon as promise is actually FULFILLED - as soon as the result is available
+
+//         This function will receive one argument, that argument is the resulting value of fulfilling promise
+
+//     */
+//     .then(function (response) {
+//       console.log("Reponse of promise: ", response);
+
+//       //   The body of response is hold the data from server response, if you want to read this data, you need to call .json() method. The json() method is available for all response come from fetch function.
+//       // The .json actually is also the asynchronous function, it's mean it also will return a promise.
+
+//       //   We need to consume this promise to get the actual data that is comming from fetch function
+//       return response.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//       renderCountry(data[0]);
+//     });
+// };
+
+const getCountryData = function (country) {
+  // Immediately return a promise
+  fetch(`${BASE_CONTRIES_URL}name/${country}`)
+    .then((response) => response.json())
+    .then((data) => renderCountry(data[0]));
 };
 
-getCountryAndNeighbour("usa");
+let countryName = "vietnam";
+getCountryData(countryName);
