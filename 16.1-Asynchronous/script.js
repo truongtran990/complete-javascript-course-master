@@ -45,7 +45,10 @@ const LATEST_VERSION = "v3.1";
 const BASE_CONTRIES_URL = `https://restcountries.com/${LATEST_VERSION}/`;
 const btn = document.querySelector(".btn-country");
 const countriesContainer = document.querySelector(".countries");
+const GEO_API_KEY = "138478313874028e15846753x61534";
+const BASE_GEO_URL = `https://geocode.xyz/`;
 
+//'https://geocode.xyz/51.50354,-0.12768?geoit=xml&auth=your_api_key'
 ///////////////////////////////////////////// XMLHttpRequest /////////////////////////////////////////////
 
 /* const getCountryData = function (countryName) {
@@ -119,8 +122,8 @@ const renderCountry = function (data, className = "") {
 
   // beforeend or afterbegin will insert new element in the same element
   countriesContainer.insertAdjacentHTML("beforeend", html);
-  //   if (countriesContainer.style.opacity !== 1)
-  //     countriesContainer.style.opacity = 1;
+  if (countriesContainer.style.opacity !== 1)
+    countriesContainer.style.opacity = 1;
 };
 
 /* const getCountryAndNeighbour = function (countryName) {
@@ -290,9 +293,41 @@ const getCountryData = function (country) {
     });
 };
 
+const whereAmI = function (lat, lng) {
+  getJSON(
+    `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`,
+    "Wrong went reverse geo!"
+  )
+    .then((data) => {
+      // if(data.)
+      if (data.success === false && data.error?.code === "006") {
+        throw new Error(
+          `Exceed limit request per second. ${data.error?.message}`
+        );
+      }
+      const country = data.country;
+
+      console.log(`You are in ${data.city}, ${country}`);
+      return fetch(`${BASE_CONTRIES_URL}name/${country}`);
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`Country not found (${res.status})`);
+      }
+      return res.json();
+    })
+    .then((data) => renderCountry(data[0]))
+    .catch((err) => {
+      console.error(`Somethings went wrong with reverse geo.\n${err}`);
+    });
+};
+
 let countryName = "germany";
 btn.addEventListener("click", function () {
   getCountryData(countryName);
 });
+// getCountryData("australia");
 
-getCountryData("australia");
+whereAmI(52.508, 13.381);
+whereAmI(19.037, 72.873);
+whereAmI(-33.933, 18.474);
