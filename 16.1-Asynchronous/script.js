@@ -204,26 +204,81 @@ What is the promise?
 //     });
 // };
 
+const getJSON = function (url, errorMsg = "Something went wrong") {
+  return fetch(url).then((response) => {
+    if (!response.ok) {
+      throw new Error(`${errorMsg} (${response.status})`);
+    }
+    return response.json();
+  });
+};
+
+// // The then() method alway return a promise
+// const getCountryData = function (country) {
+//   // Country 1
+//   //   The fetch promise only reject when there is no connection, the status code is 404, the fetch promise will still get fulfulled, no rejected.
+//   fetch(`${BASE_CONTRIES_URL}name/${country}`)
+//     .then(
+//       // The first callback function in .then() method for the fulfilled promised
+//       (response) => {
+//         console.log("res 1: ", response);
+
+//         if (!response.ok) {
+//           // Immediate reject the promise
+//           throw new Error(`Country not found (${response.status})`);
+//         }
+
+//         return response.json();
+//       }
+//       // The second callback function is for the rejected
+//     )
+//     .then((data) => {
+//       renderCountry(data?.[0]);
+//       //   const neighbour = data[0]?.borders?.[0];
+//       const neighbour = "asfads";
+//       if (!neighbour) {
+//         return "Neighbour does not exists";
+//       }
+//       //   Country 2
+//       return fetch(`${BASE_CONTRIES_URL}alpha/${neighbour}`);
+//     })
+//     .then((response) => {
+//       if (!response.ok) {
+//         throw new Error(`Can not get the neighbour data (${response.status})`);
+//       }
+//       return response.json();
+//     })
+//     .then((data) => renderCountry(data[0], "neighbour"))
+//     .catch((error) => {
+//       console.error(`${error} ✴✴✴`);
+//       renderError(`Something went wrong ✴✴✴ ${error.message}. Try again!`);
+//     })
+
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
 // The then() method alway return a promise
 const getCountryData = function (country) {
   // Country 1
   //   The fetch promise only reject when there is no connection, the status code is 404, the fetch promise will still get fulfulled, no rejected.
-  fetch(`${BASE_CONTRIES_URL}name/${country}`)
-    .then(
-      // The first callback function in .then() method for the fulfilled promised
-      (response) => response.json()
-      // The second callback function is for the rejected
-    )
+  getJSON(`${BASE_CONTRIES_URL}name/${country}`, "Country not found")
     .then((data) => {
       renderCountry(data?.[0]);
       const neighbour = data[0]?.borders?.[0];
+
+      console.log("neighbour: ", neighbour);
       if (!neighbour) {
-        return "Neighbour does not exists";
+        // Immediately return reject promise
+        throw new Error("No neighbour found!");
       }
       //   Country 2
-      return fetch(`${BASE_CONTRIES_URL}alpha/${neighbour}`);
+      return getJSON(
+        `${BASE_CONTRIES_URL}alpha/${neighbour}`,
+        "Neighbour not found"
+      );
     })
-    .then((response) => response.json())
     .then((data) => renderCountry(data[0], "neighbour"))
     .catch((error) => {
       console.error(`${error} ✴✴✴`);
@@ -235,7 +290,9 @@ const getCountryData = function (country) {
     });
 };
 
-let countryName = "germany1";
+let countryName = "germany";
 btn.addEventListener("click", function () {
   getCountryData(countryName);
 });
+
+getCountryData("australia");
