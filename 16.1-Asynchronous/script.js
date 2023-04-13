@@ -293,11 +293,78 @@ const getCountryData = function (country) {
     });
 };
 
-const whereAmI = function (lat, lng) {
-  getJSON(
-    `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`,
-    "Wrong went reverse geo!"
-  )
+// const whereAmI = function (lat, lng) {
+//   getPosition;
+//   getJSON(
+//     `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`,
+//     "Wrong went reverse geo!"
+//   )
+//     .then((data) => {
+//       // if(data.)
+//       if (data.success === false && data.error?.code === "006") {
+//         throw new Error(
+//           `Exceed limit request per second. ${data.error?.message}`
+//         );
+//       }
+//       const country = data.country;
+
+//       console.log(`You are in ${data.city}, ${country}`);
+//       return fetch(`${BASE_CONTRIES_URL}name/${country}`);
+//     })
+//     .then((res) => {
+//       if (!res.ok) {
+//         throw new Error(`Country not found (${res.status})`);
+//       }
+//       return res.json();
+//     })
+//     .then((data) => renderCountry(data[0]))
+//     .catch((err) => {
+//       console.error(`Somethings went wrong with reverse geo.\n${err}`);
+//     });
+// };
+
+// let countryName = "germany";
+// btn.addEventListener("click", function () {
+//   getCountryData(countryName);
+// });
+
+// getCountryData("australia");
+
+// whereAmI(52.508, 13.381);
+// whereAmI(19.037, 72.873);
+// whereAmI(-33.933, 18.474);
+
+// Convert into promisify
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    // This line of code .getCurrentPosition work as asynchronous way, it running in the webAPI
+    navigator.geolocation.getCurrentPosition(
+      // (position) => resolve(position),
+      // (err) => reject(err)
+
+      // We simply place the resolve and reject as function parameter at here, because the getCurrentPosition default pass the position as argument for thhe first function to handle get position successfully
+      resolve,
+      reject
+    );
+  });
+};
+
+// Now we handle the result - in the other hand we CONSUME the promise
+// getPosition().then((position) => {
+//   const { latitude: lat, longitude: lng } = position.coords;
+//   console.log(lat, lng);
+//   whereAmI(lat, lng);
+// });
+
+const whereAmI = function () {
+  getPosition()
+    .then((position) => {
+      const { latitude: lat, longitude: lng } = position.coords;
+      return getJSON(
+        `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`,
+        "Wrong went reverse geo!"
+      );
+    })
     .then((data) => {
       // if(data.)
       if (data.success === false && data.error?.code === "006") {
@@ -322,12 +389,4 @@ const whereAmI = function (lat, lng) {
     });
 };
 
-let countryName = "germany";
-btn.addEventListener("click", function () {
-  getCountryData(countryName);
-});
-// getCountryData("australia");
-
-whereAmI(52.508, 13.381);
-whereAmI(19.037, 72.873);
-whereAmI(-33.933, 18.474);
+btn.addEventListener("click", whereAmI);
