@@ -356,38 +356,38 @@ const getPosition = function () {
 //   whereAmI(lat, lng);
 // });
 
-const whereAmI = function () {
-  getPosition()
-    .then((position) => {
-      const { latitude: lat, longitude: lng } = position.coords;
-      return getJSON(
-        `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`,
-        "Wrong went reverse geo!"
-      );
-    })
-    .then((data) => {
-      // if(data.)
-      if (data.success === false && data.error?.code === "006") {
-        throw new Error(
-          `Exceed limit request per second. ${data.error?.message}`
-        );
-      }
-      const country = data.country;
+// const whereAmI = function () {
+//   getPosition()
+//     .then((position) => {
+//       const { latitude: lat, longitude: lng } = position.coords;
+//       return getJSON(
+//         `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`,
+//         "Wrong went reverse geo!"
+//       );
+//     })
+//     .then((data) => {
+//       // if(data.)
+//       if (data.success === false && data.error?.code === "006") {
+//         throw new Error(
+//           `Exceed limit request per second. ${data.error?.message}`
+//         );
+//       }
+//       const country = data.country;
 
-      console.log(`You are in ${data.city}, ${country}`);
-      return fetch(`${BASE_CONTRIES_URL}name/${country}`);
-    })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(`Country not found (${res.status})`);
-      }
-      return res.json();
-    })
-    .then((data) => renderCountry(data[0]))
-    .catch((err) => {
-      console.error(`Somethings went wrong with reverse geo.\n${err}`);
-    });
-};
+//       console.log(`You are in ${data.city}, ${country}`);
+//       return fetch(`${BASE_CONTRIES_URL}name/${country}`);
+//     })
+//     .then((res) => {
+//       if (!res.ok) {
+//         throw new Error(`Country not found (${res.status})`);
+//       }
+//       return res.json();
+//     })
+//     .then((data) => renderCountry(data[0]))
+//     .catch((err) => {
+//       console.error(`Somethings went wrong with reverse geo.\n${err}`);
+//     });
+// };
 
 // btn.addEventListener("click", whereAmI);
 
@@ -417,7 +417,7 @@ const createImage = function (imgPath) {
 };
 
 const imgPath1 = "./img/img-1.jpg";
-const imgPath2 = "./img/img-22.jpg";
+const imgPath2 = "./img/img-2.jpg";
 const imgPath3 = "./img/img-3.jpg";
 
 const wait = (seconds) => {
@@ -428,22 +428,22 @@ const wait = (seconds) => {
   });
 };
 
-let globalImage;
-createImage(imgPath1)
-  .then((image1) => {
-    globalImage = image1;
-    return wait(2);
-  })
-  .then(() => {
-    globalImage.style.display = "none";
-    return createImage(imgPath2);
-  })
-  .then((image2) => {
-    globalImage = image2;
-    return wait(2);
-  })
-  .then(() => (globalImage.style.display = "none"))
-  .catch((error) => console.error(error));
+// let globalImage;
+// createImage(imgPath1)
+//   .then((image1) => {
+//     globalImage = image1;
+//     return wait(2);
+//   })
+//   .then(() => {
+//     globalImage.style.display = "none";
+//     return createImage(imgPath2);
+//   })
+//   .then((image2) => {
+//     globalImage = image2;
+//     return wait(2);
+//   })
+//   .then(() => (globalImage.style.display = "none"))
+//   .catch((error) => console.error(error));
 
 // 2. When the image is done loading, append it to the DOM element with the
 // 'images' class, and resolve the promise. The fulfilled value should be the
@@ -466,3 +466,42 @@ createImage(imgPath1)
 // 7. After the second image has loaded, pause execution for 2 seconds again
 
 // 8. After the 2 seconds have passed, hide the current image
+
+const whereAmI = async function () {
+  try {
+    const position = await getPosition();
+    const { latitude: lat, longitude: lng } = position.coords;
+
+    // Reverse geocoding
+    const resGeo = await fetch(
+      `${BASE_GEO_URL}${lat},${lng}?geoit=json&auth=${GEO_API_KEY}`
+    );
+
+    if (!resGeo.ok) {
+      throw new Error(`Encounter problem when fetching location data`);
+    }
+
+    const dataGeo = await resGeo.json();
+
+    const res = await fetch(`${BASE_CONTRIES_URL}name/${dataGeo.country}`);
+    if (!res.ok) {
+      throw new Error(`Encounter problem when fetching country data`);
+    }
+
+    const data = await res.json();
+
+    renderCountry(data[0]);
+  } catch (error) {
+    console.error(error.message);
+    renderError(error.message);
+  }
+};
+
+whereAmI();
+
+// try {
+//   const x = 10;
+//   x = 11;
+// } catch (error) {
+//   console.error(error.message);
+// }
