@@ -389,4 +389,80 @@ const whereAmI = function () {
     });
 };
 
-btn.addEventListener("click", whereAmI);
+// btn.addEventListener("click", whereAmI);
+
+/////////////////////////////////// CODING CHALLENGE 2 ///////////////////////////////////
+
+// PART 1
+// 1. Create a function 'createImage' which receives 'imgPath' as an input.
+// This function returns a promise which creates a new image (use
+// document.createElement('img')) and sets the .src attribute to the
+// provided image path
+
+const imagesContainer = document.querySelector(".images");
+
+const createImage = function (imgPath) {
+  return new Promise(function (resolve, reject) {
+    const newImg = document.createElement("img");
+    newImg.src = imgPath;
+
+    newImg.addEventListener("load", function () {
+      imagesContainer.insertAdjacentElement("beforeend", newImg);
+      resolve(newImg);
+    });
+    newImg.addEventListener("error", function () {
+      reject(new Error("Error while loading image"));
+    });
+  });
+};
+
+const imgPath1 = "./img/img-1.jpg";
+const imgPath2 = "./img/img-22.jpg";
+const imgPath3 = "./img/img-3.jpg";
+
+const wait = (seconds) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, seconds * 1000);
+  });
+};
+
+let globalImage;
+createImage(imgPath1)
+  .then((image1) => {
+    globalImage = image1;
+    return wait(2);
+  })
+  .then(() => {
+    globalImage.style.display = "none";
+    return createImage(imgPath2);
+  })
+  .then((image2) => {
+    globalImage = image2;
+    return wait(2);
+  })
+  .then(() => (globalImage.style.display = "none"))
+  .catch((error) => console.error(error));
+
+// 2. When the image is done loading, append it to the DOM element with the
+// 'images' class, and resolve the promise. The fulfilled value should be the
+// image element itself. In case there is an error loading the image (listen for
+// the'error' event), reject the promise
+
+// 3. If this part is too tricky for you, just watch the first part of the solution
+// PART 2
+
+// 4. Consume the promise using .then and also add an error handler
+
+// 5. After the image has loaded, pause execution for 2 seconds using the 'wait'
+// function we created earlier
+
+// 6. After the 2 seconds have passed, hide the current image (set display CSS
+// property to 'none'), and load a second image (Hint: Use the image element
+// returned by the 'createImage' promise to hide the current image. You will
+// need a global variable for that 😉)
+
+// 7. After the second image has loaded, pause execution for 2 seconds again
+
+// 8. After the 2 seconds have passed, hide the current image
