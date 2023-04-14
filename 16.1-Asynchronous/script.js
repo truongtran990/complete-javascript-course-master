@@ -491,13 +491,15 @@ const whereAmI = async function () {
     const data = await res.json();
 
     renderCountry(data[0]);
+    return data[0];
   } catch (error) {
     console.error(error.message);
     renderError(error.message);
   }
 };
 
-whereAmI();
+// const data = whereAmI();
+// data.then((x) => console.log(x));
 
 // try {
 //   const x = 10;
