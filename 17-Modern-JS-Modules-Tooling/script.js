@@ -83,11 +83,47 @@ const getLastPost = async function () {
 };
 
 // Start fetching
-console.log(`Starting fetch posts`);
-(async function () {
-  const data = await getLastPost();
-  console.log(data);
-})();
-console.log(`Ending fetch posts`);
+// console.log(`Starting fetch posts`);
+// (async function () {
+//   const data = await getLastPost();
+//   console.log(data);
+// })();
+// console.log(`Ending fetch posts`);
 
 // One module import a module which as a top-level await, then the importing module will wait for the imported module to fisnish the blocking code
+
+// console.log("Start consume promise");
+// fetch(`https://jsonplaceholder.typicode.com/posts`)
+//   .then((res) => res.json())
+//   .then((data) => console.log("data from .then method: ", data));
+// console.log("End consume promise");
+
+const ShoppingCart2 = (function (params) {
+  const cart = [];
+  const shippingCost = 10;
+  const totalPrice = 237;
+  const totalQuantity = 23;
+
+  const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(
+      `${quantity} ${product}(s) added to cart (shipping cost: ${shippingCost})`
+    );
+  };
+
+  const orderStock = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product}(s) ordered from supplier`);
+  };
+  return {
+    addToCart,
+    cart,
+    totalPrice,
+    totalQuantity,
+  };
+})();
+
+ShoppingCart2.addToCart("Apple", 4);
+ShoppingCart2.addToCart("Pizza", 8);
+console.log(ShoppingCart2);
+console.log(ShoppingCart2.shippingCost);
