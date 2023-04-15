@@ -47,7 +47,7 @@ Importing value always the first things happen in the modules.
 // } from "./shoppingCart.js";
 // import * as shoppingCart from "./shoppingCart.js";
 
-console.log("Importing module");
+// console.log("Importing module");
 
 // addToCart("bread", 10);
 
@@ -59,8 +59,35 @@ console.log("Importing module");
 
 import add, { cart } from "./shoppingCart.js";
 
-add("IPX 14 RPM", 100);
-add("IPX 13 RPM", 100);
-add("IPX 12 RPM", 100);
+// add("IPX 14 RPM", 100);
+// add("IPX 13 RPM", 100);
+// add("IPX 12 RPM", 100);
 
-console.log(cart);
+// console.log(cart);
+
+// console.log(`Start fetching`);
+
+// const dataFetched = await (
+//   await fetch(`https://jsonplaceholder.typicode.com/posts`)
+// ).json();
+
+// console.log("dataFetched", dataFetched);
+// console.log(`Something really`);
+
+const getLastPost = async function () {
+  const dataFetched = await (
+    await fetch(`https://jsonplaceholder.typicode.com/posts`)
+  ).json();
+
+  return { title: dataFetched.at(-1), text: dataFetched.at(-1).body };
+};
+
+// Start fetching
+console.log(`Starting fetch posts`);
+(async function () {
+  const data = await getLastPost();
+  console.log(data);
+})();
+console.log(`Ending fetch posts`);
+
+// One module import a module which as a top-level await, then the importing module will wait for the imported module to fisnish the blocking code
