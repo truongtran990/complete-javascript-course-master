@@ -98,7 +98,7 @@ const getLastPost = async function () {
 //   .then((data) => console.log("data from .then method: ", data));
 // console.log("End consume promise");
 
-const ShoppingCart2 = (function (params) {
+/* const ShoppingCart2 = (function (params) {
   const cart = [];
   const shippingCost = 10;
   const totalPrice = 237;
@@ -126,4 +126,15 @@ const ShoppingCart2 = (function (params) {
 ShoppingCart2.addToCart("Apple", 4);
 ShoppingCart2.addToCart("Pizza", 8);
 console.log(ShoppingCart2);
-console.log(ShoppingCart2.shippingCost);
+console.log(ShoppingCart2.shippingCost); */
+
+/* // Export in nodejs
+export.addToCart = function (product, quantity) {
+  cart.push({ product, quantity });
+  console.log(
+    `${quantity} ${product}(s) added to cart (shipping cost: ${shippingCost})`
+  );
+};
+
+// Import in nodejs
+const {addToCart} = require("./shoppingCart.js"); */
