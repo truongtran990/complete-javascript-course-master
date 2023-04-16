@@ -40,22 +40,22 @@ Importing value always the first things happen in the modules.
 
 // Importing a module
 
-// import {
-//   addToCart,
-//   totalPrice as price,
-//   tq as quantity,
-// } from "./shoppingCart.js";
-// import * as shoppingCart from "./shoppingCart.js";
+import {
+  addToCart,
+  totalPrice as price,
+  tq as quantity,
+} from "./shoppingCart.js";
+import * as shoppingCart from "./shoppingCart.js";
 
-// console.log("Importing module");
+console.log("Importing module");
 
-// addToCart("bread", 10);
+addToCart("bread", 10);
 
-// console.log(price, quantity);
+console.log(price, quantity);
 
-// console.log(shoppingCart);
+console.log(shoppingCart);
 
-// shoppingCart.addToCart("IPX 14 RPM", 100);
+shoppingCart.addToCart("IPX 14 RPM", 100);
 
 import add, { cart } from "./shoppingCart.js";
 
@@ -63,7 +63,7 @@ import add, { cart } from "./shoppingCart.js";
 // add("IPX 13 RPM", 100);
 // add("IPX 12 RPM", 100);
 
-// console.log(cart);
+console.log(cart);
 
 // console.log(`Start fetching`);
 
@@ -138,3 +138,33 @@ export.addToCart = function (product, quantity) {
 
 // Import in nodejs
 const {addToCart} = require("./shoppingCart.js"); */
+
+import cloneDeep from "lodash-es";
+
+const state = {
+  cart: [
+    { product: "bread", quantity: 5 },
+    { product: "pizza", quantity: 5 },
+  ],
+  user: {
+    loggedIn: true,
+  },
+};
+
+const stateCloned = Object.assign({}, state);
+console.log("stateCloned", stateCloned);
+
+const stateDeepCopied = cloneDeep(state);
+console.log("stateDeepCopied", stateDeepCopied);
+
+state.user.loggedIn = false;
+// console.log(process.env.PORT);
+
+// Prevent reload page when the code changes
+
+if (module.hot) {
+  module.hot.accept();
+}
+
+// Install js package glogally
+// npm install parcel -g
