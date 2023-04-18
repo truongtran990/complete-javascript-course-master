@@ -7,3 +7,6 @@ export const NOT_FOUND_RECIPE_MESSAGE =
   "We cound not find that recipe. Please try another one!";
 
 export const DEFAULT_MESSAGE = "";
+
+export const NOT_FOUND_RECIPE_BY_QUERY_MESSAGE =
+  "No recipes found for your query. Please try again!";

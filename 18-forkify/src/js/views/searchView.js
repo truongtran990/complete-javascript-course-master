@@ -14,21 +14,21 @@ class SearchView {
         </button>
     </form> 
   */
-  #parentEl = document.querySelector(".search");
+  _parentEl = document.querySelector(".search");
 
   getQuery() {
-    const queryString = this.#parentEl.querySelector(".search__field").value;
-    this.#clearInput();
+    const queryString = this._parentEl.querySelector(".search__field").value;
+    this._clearInput();
     return queryString;
   }
 
-  #clearInput() {
-    this.#parentEl.querySelector(".search__field").value = "";
+  _clearInput() {
+    this._parentEl.querySelector(".search__field").value = "";
   }
 
   addHandlerSearch(handler) {
     // Add eventlistener for url address is change
-    this.#parentEl.addEventListener("submit", function (event) {
+    this._parentEl.addEventListener("submit", function (event) {
       event.preventDefault();
       console.log(event);
       handler();
