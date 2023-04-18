@@ -1,10 +1,14 @@
-import { async } from 'regenerator-runtime';
+import { async } from "regenerator-runtime";
 
-import { FORKIFY_API_URL } from './config.js';
-import { getJSON } from './views/utils.js';
+import { FORKIFY_API_URL } from "./config.js";
+import { getJSON } from "./views/utils.js";
 
 export const state = {
   recipe: {},
+  search: {
+    query: "",
+    results: [],
+  },
 };
 
 export const loadRecipe = async function (id) {
@@ -22,11 +26,31 @@ export const loadRecipe = async function (id) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-    console.log(state.recipe);
   } catch (error) {
-    console.error(error);
+    console.error(error, " 💥💥💥");
     throw error;
   }
 
   return state.recipe;
 };
+
+export const loadSearchResults = async function (query) {
+  try {
+    const data = await getJSON(`${FORKIFY_API_URL}?search=${query}`);
+
+    state.search.query = query;
+    state.search.results = data.data.recipes.map(recipe => {
+      return {
+        id: recipe.id,
+        title: recipe.title,
+        publisher: recipe.publisher,
+        image: recipe.image_url,
+      };
+    });
+  } catch (error) {
+    console.error(error, " 💥💥💥");
+    throw error;
+  }
+};
+
+// loadSearchResults("pizza");
