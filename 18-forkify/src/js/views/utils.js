@@ -12,7 +12,7 @@ export const getJSON = async function (url) {
     }
     return data;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 };
 

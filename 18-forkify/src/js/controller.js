@@ -1,8 +1,8 @@
-import 'core-js/stable';
-import 'regenerator-runtime/runtime';
+import "core-js/stable";
+import "regenerator-runtime/runtime";
 
-import * as model from './model.js';
-import recipeView from './views/recipeView.js';
+import * as model from "./model.js";
+import recipeView from "./views/recipeView.js";
 
 // https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
@@ -26,12 +26,15 @@ const controllRecipes = async function () {
     recipeView.render(model.state.recipe);
   } catch (error) {
     console.error(error);
+    recipeView.renderError();
   }
 };
-// Because the controllRecipes is created with the async keyword -> so it will run in the background, and not block the main execution context
-controllRecipes();
 
-// Add eventlistener for url address is change
-['hashchange', 'load'].forEach(ev =>
-  window.addEventListener(ev, controllRecipes)
-);
+// Because the controllRecipes is created with the async keyword -> so it will run in the background, and not block the main execution context
+// controllRecipes();
+
+const init = function () {
+  recipeView.addHandlerRender(controllRecipes);
+};
+
+init();
