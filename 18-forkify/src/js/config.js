@@ -10,3 +10,5 @@ export const DEFAULT_MESSAGE = "";
 
 export const NOT_FOUND_RECIPE_BY_QUERY_MESSAGE =
   "No recipes found for your query. Please try again!";
+
+export const PAGE_SIZE = 10;

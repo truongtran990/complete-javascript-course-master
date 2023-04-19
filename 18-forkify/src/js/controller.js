@@ -7,9 +7,9 @@ import recipeView from "./views/recipeView.js";
 import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
 
-if (module.hot) {
-  module.hot.accept();
-}
+// if (module.hot) {
+//   module.hot.accept();
+// }
 // https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
 
@@ -52,7 +52,8 @@ const controlSearchResults = async function () {
     // 3) Render results
     console.log(model.state.search);
 
-    resultsView.render(model.state.search.results);
+    // resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPage());
   } catch (error) {
     console.error(error);
   }

@@ -1,6 +1,6 @@
 import { async } from "regenerator-runtime";
 
-import { FORKIFY_API_URL } from "./config.js";
+import { FORKIFY_API_URL, PAGE_SIZE } from "./config.js";
 import { getJSON } from "./views/utils.js";
 
 export const state = {
@@ -8,6 +8,8 @@ export const state = {
   search: {
     query: "",
     results: [],
+    resultsPerPage: PAGE_SIZE,
+    page: 1,
   },
 };
 
@@ -54,3 +56,14 @@ export const loadSearchResults = async function (query) {
 };
 
 // loadSearchResults("pizza");
+export const getSearchResultsPage = function (page = state.search.page) {
+  if (page < 1) {
+    return state.search.results.slice(0, state.search.resultsPerPage - 1);
+  }
+  state.search.page = page;
+  const start = (page - 1) * state.search.resultsPerPage;
+  const end = page * state.search.resultsPerPage;
+
+  console.log("aaaaaaa", start, end);
+  return state.search.results.slice(start, end);
+};
