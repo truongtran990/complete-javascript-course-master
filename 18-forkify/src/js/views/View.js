@@ -21,8 +21,11 @@ export default class View {
     // Clear innerHTML before append new element
     const newMarkup = this._generateMarkup();
 
+    // Create new DOM from newMarkup, but not render it to the real DOM;
     const newDOM = document.createRange().createContextualFragment(newMarkup);
     const newElements = Array.from(newDOM.querySelectorAll("*"));
+
+    // Get all element of the parrentElement
     const currentElements = Array.from(
       this._parentElement.querySelectorAll("*")
     );
@@ -30,17 +33,15 @@ export default class View {
     console.log(currentElements);
     console.log(newElements);
 
+    // Loop over the newElements to update the TEXT and ATTRIBUTE if it's differences and needed
     newElements.forEach((newEl, index) => {
       const currentElement = currentElements[index];
-
-      console.log("newEl", newEl.isEqualNode(currentElement));
 
       // Updates changed TEXT
       if (
         !newEl.isEqualNode(currentElement) &&
         newEl.firstChild?.nodeValue.trim() !== ""
       ) {
-        // console.log("newEl111", newEl);
         currentElement.textContent = newEl.textContent;
       }
 
