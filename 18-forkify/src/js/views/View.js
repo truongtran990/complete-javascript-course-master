@@ -35,9 +35,6 @@ export default class View {
       this._parentElement.querySelectorAll("*")
     );
 
-    console.log(currentElements);
-    console.log(newElements);
-
     // Loop over the newElements to update the TEXT and ATTRIBUTE if it's differences and needed
     newElements.forEach((newEl, index) => {
       const currentElement = currentElements[index];
@@ -47,14 +44,15 @@ export default class View {
         !newEl.isEqualNode(currentElement) &&
         newEl.firstChild?.nodeValue.trim() !== ""
       ) {
-        currentElement.textContent = newEl.textContent;
+        if (currentElement) currentElement.textContent = newEl.textContent;
       }
 
       // Updates changed ATTRIBUTES
       if (!newEl.isEqualNode(currentElement)) {
-        console.log(Array.from(newEl.attributes));
         Array.from(newEl.attributes).forEach(attribute => {
-          currentElement.setAttribute(attribute.name, attribute.value);
+          if (currentElement) {
+            currentElement.setAttribute(attribute.name, attribute.value);
+          }
         });
       }
     });

@@ -30,7 +30,6 @@ class SearchView {
     // Add eventlistener for url address is change
     this._parentEl.addEventListener("submit", function (event) {
       event.preventDefault();
-      console.log(event);
       handler();
     });
   }

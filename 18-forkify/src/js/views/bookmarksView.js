@@ -9,8 +9,11 @@ class BookmarksView extends View {
   _errorMessage = NOT_FOUND_BOOKMARKS;
   _message = DEFAULT_MESSAGE;
 
+  addHandlerRender(handler) {
+    window.addEventListener("load", handler);
+  }
+
   _generateMarkup() {
-    console.log(this._data);
     return this._data
       .map(bookmark => {
         return previewView.render(bookmark, false);
