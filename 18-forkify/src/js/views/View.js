@@ -2,7 +2,7 @@ import icons from "url:../../img/icons.svg"; // Parcel 2
 
 export default class View {
   _data;
-  render(data) {
+  render(data, render = true) {
     if (!data || (Array.isArray(data) && data.length === 0)) {
       return this.renderError();
     }
@@ -11,6 +11,11 @@ export default class View {
 
     // Clear innerHTML before append new element
     const markup = this._generateMarkup();
+
+    if (!render) {
+      return markup;
+    }
+
     this._clear();
     this._parentElement.insertAdjacentHTML("afterbegin", markup);
   }

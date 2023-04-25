@@ -1,4 +1,5 @@
 import View from "./View.js";
+import previewView from "./previewView.js";
 import icons from "url:../../img/icons.svg"; // Parcel 2
 import {
   NOT_FOUND_RECIPE_BY_QUERY_MESSAGE,

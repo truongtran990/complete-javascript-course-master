@@ -7,6 +7,7 @@ import recipeView from "./views/recipeView.js";
 import searchView from "./views/searchView.js";
 import resultsView from "./views/resultsView.js";
 import paginationView from "./views/paginationView.js";
+import bookmarksView from "./views/bookmarksView.js";
 
 // if (module.hot) {
 //   module.hot.accept();
@@ -14,7 +15,7 @@ import paginationView from "./views/paginationView.js";
 // https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
 
-const controllRecipes = async function () {
+const controlRecipes = async function () {
   try {
     const id = window.location.hash?.slice(1);
 
@@ -24,6 +25,7 @@ const controllRecipes = async function () {
 
     // 0) Update results view to mark selected search result
     resultsView.update(model.getSearchResultsPage());
+    bookmarksView.update(model.state.bookmarks);
 
     // 1) Loading recipe
     await model.loadRecipe(id);
@@ -38,8 +40,8 @@ const controllRecipes = async function () {
   }
 };
 
-// Because the controllRecipes is created with the async keyword -> so it will run in the background, and not block the main execution context
-// controllRecipes();
+// Because the controlRecipes is created with the async keyword -> so it will run in the background, and not block the main execution context
+// controlRecipes();
 
 const controlSearchResults = async function () {
   try {
@@ -82,17 +84,22 @@ const controlServings = function (newServings) {
 };
 
 const controlAddBookmark = function () {
+  // 1) Add/Remove bookmark
   if (!model.state.recipe.bookmarked) {
     model.addBookmark(model.state.recipe);
   } else {
     model.deleteBookmark(model.state.recipe.id);
   }
-  console.log(model.state.recipe);
+
+  // 2) Render recipe view
   recipeView.update(model.state.recipe);
+
+  // 3) Render bookmarks
+  bookmarksView.render(model.state.bookmarks);
 };
 
 const init = function () {
-  recipeView.addHandlerRender(controllRecipes);
+  recipeView.addHandlerRender(controlRecipes);
   recipeView.addHandlerUpdateServings(controlServings);
   recipeView.addHandlerAddBookmark(controlAddBookmark);
   searchView.addHandlerSearch(controlSearchResults);
