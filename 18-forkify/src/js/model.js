@@ -6,7 +6,8 @@ import {
   WRONG_INGREDIENT_UPLOAD_FORMAT,
   FORKIFY_API_KEY,
 } from "./config.js";
-import { getJSON, sendJSON } from "./views/utils.js";
+// import { getJSON, sendJSON } from "./views/utils.js";
+import { AJAX } from "./views/utils.js";
 
 export const state = {
   recipe: {},
@@ -36,7 +37,7 @@ const createRecipeObject = function (data) {
 
 export const loadRecipe = async function (id) {
   try {
-    const data = await getJSON(`${FORKIFY_API_URL}${id}`);
+    const data = await AJAX(`${FORKIFY_API_URL}${id}?key=${FORKIFY_API_KEY}`);
 
     state.recipe = createRecipeObject(data);
 
@@ -57,7 +58,9 @@ export const loadRecipe = async function (id) {
 
 export const loadSearchResults = async function (query) {
   try {
-    const data = await getJSON(`${FORKIFY_API_URL}?search=${query}`);
+    const data = await AJAX(
+      `${FORKIFY_API_URL}?search=${query}&key=${FORKIFY_API_KEY}`
+    );
 
     state.search.query = query;
     state.search.page = 1;
@@ -67,6 +70,7 @@ export const loadSearchResults = async function (query) {
         title: recipe.title,
         publisher: recipe.publisher,
         image: recipe.image_url,
+        ...(recipe.key && { key: recipe.key }),
       };
     });
   } catch (error) {
@@ -142,7 +146,8 @@ export const uploadRecipe = async function (newRecipe) {
         return entry[0].startsWith("ingredient") && entry[1] !== "";
       })
       .map(ingredient => {
-        const ingredientArray = ingredient[1].replaceAll(" ", "").split(",");
+        // const ingredientArray = ingredient[1].replaceAll(" ", "").split(",");
+        const ingredientArray = ingredient[1].split(",").map(el => el.trim());
 
         if (ingredientArray.length !== 3) {
           throw new Error(WRONG_INGREDIENT_UPLOAD_FORMAT);
@@ -167,7 +172,7 @@ export const uploadRecipe = async function (newRecipe) {
     };
     console.log(recipe);
 
-    const data = await sendJSON(
+    const data = await AJAX(
       `${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`,
       recipe
     );
