@@ -10,6 +10,8 @@ import paginationView from "./views/paginationView.js";
 import bookmarksView from "./views/bookmarksView.js";
 import addRecipeView from "./views/addRecipeView.js";
 
+import { TIME_TO_HIDDEN_FORM } from "./config.js";
+
 // if (module.hot) {
 //   module.hot.accept();
 // }
@@ -104,10 +106,30 @@ const controlAddBookmarks = function () {
   bookmarksView.render(model.state.bookmarks);
 };
 
-const controlAddRecipe = function (newRecipe) {
-  console.log("newRecipe: ", newRecipe);
+const controlAddRecipe = async function (newRecipe) {
+  try {
+    // Show loading spinner
+    addRecipeView.renderSpinner();
 
-  // Upload the new recipe data
+    // Upload the new recipe data
+    await model.uploadRecipe(newRecipe);
+
+    console.log(model.state.recipe);
+
+    // Render recipe which already uploaded
+    recipeView.render(model.state.recipe);
+
+    // Success message
+    addRecipeView.renderMessage();
+
+    // Close form window
+    setTimeout(() => {
+      // addRecipeView.toggleHidden();
+    }, TIME_TO_HIDDEN_FORM * 1000);
+  } catch (error) {
+    console.error(error);
+    addRecipeView.renderError(error.message);
+  }
 };
 
 const init = function () {

@@ -1,8 +1,11 @@
 import View from "./View.js";
 import icons from "url:../../img/icons.svg"; // Parcel 2
 
+import { UPLOAD_RECIPE_SUCCESS_MSG } from "../config.js";
+
 class AddRecipeView extends View {
   _parentElement = document.querySelector(".upload");
+  _message = UPLOAD_RECIPE_SUCCESS_MSG;
 
   _windowEl = document.querySelector(".add-recipe-window");
   _overlayEl = document.querySelector(".overlay");

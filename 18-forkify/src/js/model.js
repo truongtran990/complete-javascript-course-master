@@ -1,7 +1,12 @@
 import { async } from "regenerator-runtime";
 
-import { FORKIFY_API_URL, PAGE_SIZE } from "./config.js";
-import { getJSON } from "./views/utils.js";
+import {
+  FORKIFY_API_URL,
+  PAGE_SIZE,
+  WRONG_INGREDIENT_UPLOAD_FORMAT,
+  FORKIFY_API_KEY,
+} from "./config.js";
+import { getJSON, sendJSON } from "./views/utils.js";
 
 export const state = {
   recipe: {},
@@ -14,21 +19,26 @@ export const state = {
   bookmarks: [],
 };
 
+const createRecipeObject = function (data) {
+  const { recipe } = data.data;
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
+
 export const loadRecipe = async function (id) {
   try {
     const data = await getJSON(`${FORKIFY_API_URL}${id}`);
 
-    const { recipe } = data.data;
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
+    state.recipe = createRecipeObject(data);
 
     if (
       state.bookmarks.some(bookmark => {
@@ -123,4 +133,49 @@ init();
 
 const clearBookmarks = function () {
   localStorage.clear("bookmarks");
+};
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(entry => {
+        return entry[0].startsWith("ingredient") && entry[1] !== "";
+      })
+      .map(ingredient => {
+        const ingredientArray = ingredient[1].replaceAll(" ", "").split(",");
+
+        if (ingredientArray.length !== 3) {
+          throw new Error(WRONG_INGREDIENT_UPLOAD_FORMAT);
+        }
+
+        const [quantity, unit, description] = ingredientArray;
+        return {
+          quantity: quantity ? +quantity : null,
+          unit,
+          description,
+        };
+      });
+
+    const recipe = {
+      title: newRecipe.title,
+      publisher: newRecipe.publisher,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      servings: +newRecipe.servings,
+      cooking_time: +newRecipe.cookingTime,
+      ingredients,
+    };
+    console.log(recipe);
+
+    const data = await sendJSON(
+      `${FORKIFY_API_URL}?key=${FORKIFY_API_KEY}`,
+      recipe
+    );
+
+    state.recipe = createRecipeObject(data);
+
+    addBookmark(state.recipe);
+  } catch (error) {
+    throw error;
+  }
 };
