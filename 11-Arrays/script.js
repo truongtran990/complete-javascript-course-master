@@ -61,20 +61,41 @@ const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
 
+/* 
+Show the movements
+*/
+const displayMovements = function (movements) {
+  containerMovements.innerHTML = "";
+  movements.forEach((movement, index) => {
+    const moveType = movement > 0 ? "deposit" : "withdrawal";
+    const html = `
+      <div class="movements__row">
+        <div class="movements__type movements__type--${moveType}">${
+      index + 1
+    } ${moveType}</div>
+        <div class="movements__value">${movement}€</div>
+      </div>
+    `;
+    containerMovements.insertAdjacentHTML("afterbegin", html);
+  });
+};
+
+displayMovements(account1.movements);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
 
-const currencies = new Map([
-  ["USD", "United States dollar"],
-  ["EUR", "Euro"],
-  ["GBP", "Pound sterling"],
-]);
+// const currencies = new Map([
+//   ["USD", "United States dollar"],
+//   ["EUR", "Euro"],
+//   ["GBP", "Pound sterling"],
+// ]);
 
 // const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
-
+/* 
 const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 console.log(`--------------- FOR OF ---------------\n`);
@@ -93,3 +114,42 @@ movements.forEach((movement, index, array) => {
   console.log(msg);
   console.log(array);
 });
+
+ */
+
+// const currencies = new Map([
+//   ["USD", "United States dollar"],
+//   ["EUR", "Euro"],
+//   ["GBP", "Pound sterling"],
+// ]);
+
+// console.log(`--------------- FOREACH WITH MAP ---------------\n`);
+// currencies.forEach(function (value, key, map) {
+//   console.log("value: ", value);
+//   console.log("key: ", key);
+//   console.log("map: ", map);
+// });
+
+/* 
+///////////////////////////////////////////// CODING CHALLENGE 1 /////////////////////////////////////////////
+*/
+
+const checkDogs = function (dogsJulia, dogsKate) {
+  const copiedDogsJulia = [...dogsJulia];
+  copiedDogsJulia.splice(0, 1);
+  copiedDogsJulia.splice(-2, 2);
+
+  const allDogs = [...copiedDogsJulia, ...dogsKate];
+
+  allDogs.forEach((dogAge, i) => {
+    const msg =
+      dogAge >= 3
+        ? `Dog number ${i + 1} is an adult, and is ${dogAge} years old`
+        : `Dog number ${i + 1} is still a puppy 🤓`;
+
+    console.log(msg);
+  });
+};
+
+checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
+checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
