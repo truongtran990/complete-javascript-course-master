@@ -80,7 +80,93 @@ const displayMovements = function (movements) {
   });
 };
 
-displayMovements(account1.movements);
+// displayMovements(account1.movements);
+
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance}€`;
+};
+
+// calcDisplayBalance(account1.movements);
+
+const calcDisplaySummary = function (account) {
+  const incomes = account.movements
+    .filter((mov) => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out = account.movements
+    .filter((mov) => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  const interest = account.movements
+    .filter((mov) => mov > 0)
+    .map((deposit) => (deposit * account.interestRate) / 100)
+    .filter((int, _, arr) => int >= 1)
+    .reduce((acc, int) => acc + int, 0);
+  labelSumInterest.textContent = `${interest}€`;
+};
+// calcDisplaySummary(account1.movements);
+
+const user = "Steven Thomas Williams"; // output: stw
+const createUsernames = (users) => {
+  users.forEach((user) => {
+    user.username = user.owner
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word[0])
+      .join("");
+  });
+};
+createUsernames(accounts);
+
+const calcBalance = function (movements) {
+  const balance = movements.reduce((acc, movement) => acc + movement, 0);
+
+  labelBalance.textContent = `${balance}€`;
+};
+
+// calcBalance(account1.movements);
+
+// Event handler
+let currentAccount;
+
+btnLogin.addEventListener("click", function (event) {
+  // Prevent form from submitting
+  event.preventDefault();
+
+  console.log("LOGIN");
+
+  const currentAccount = accounts.find(
+    (acc) => acc.username === inputLoginUsername.value
+  );
+
+  console.log(currentAccount);
+
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    // Display UI and message
+    labelWelcome.textContent = `Welcome back, ${
+      currentAccount.owner.split(" ")[0]
+    }`;
+    containerApp.style.opacity = 100;
+
+    // Clear the input fields
+    inputLoginUsername.value = inputLoginPin.value = "";
+    inputLoginPin.blur();
+    inputLoginUsername.blur();
+
+    // Display movements
+    displayMovements(currentAccount.movements);
+
+    // Display balance
+    calcDisplayBalance(currentAccount.movements);
+
+    // Display sumary
+    calcDisplaySummary(currentAccount);
+  }
+});
 
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -151,5 +237,72 @@ const checkDogs = function (dogsJulia, dogsKate) {
   });
 };
 
-checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
-checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+const calcAverageHumanAge = function (ages) {
+  const humanAges = ages
+    .map((age) => {
+      return age > 2 ? 16 + age * 4 : 2 * age;
+    })
+    .filter((humanAge) => humanAge >= 18);
+
+  const averageAge =
+    humanAges.reduce((acc, age) => acc + age, 0) / humanAges.length;
+
+  console.log(averageAge);
+};
+
+calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
+calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+
+// checkDogs([3, 5, 2, 12, 7], [4, 1, 15, 8, 3]);
+// checkDogs([9, 16, 6, 8, 3], [10, 5, 6, 1, 4]);
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// const eurToUsd = 1.1;
+// const movementsUSD = movements.map((mov) => mov * eurToUsd);
+
+// console.log(movements);
+// console.log(movementsUSD);
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// console.log(movements);
+
+// const balance = movements.reduce(function (
+//   accumulator,
+//   currentValue,
+//   index,
+//   arr
+// ) {
+//   // accumulator hold the calc of all previous values.
+//   return accumulator + currentValue;
+// },
+// 0);
+
+// console.log(balance);
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// const maxMove = movements.reduce((acc, movement, index) => {
+//   console.log(`Iteration ${index}: accumulate-${acc}`);
+//   return acc > movement ? acc : movement;
+// }, movements[0]);
+// console.log(maxMove);
+
+/* 
+//////////////////// CODING CHALLENGE 3 ////////////////////
+*/
+// const calcAverageHumanAge2 = (ages) => {
+//   const humanAges =
+//     ages
+//       .map((age) => {
+//         return age > 2 ? 16 + age * 4 : 2 * age;
+//       })
+//       .filter((humanAge) => humanAge >= 18)
+//       .reduce((acc, age, _, arr) => acc + age, 0) / arr.length;
+
+//   console.log(humanAges);
+//   return humanAges;
+// };
+
+// const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// const find450 = movements.find((mov) => mov == 450);
+
+// console.log(find450);
