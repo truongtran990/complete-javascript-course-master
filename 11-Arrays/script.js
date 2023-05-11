@@ -202,6 +202,35 @@ btnTransfer.addEventListener("click", function (event) {
     updateUI(currentAccount);
   }
 });
+
+btnClose.addEventListener("click", function (event) {
+  event.preventDefault();
+
+  const confirmUser = inputCloseUsername.value;
+  const confirmPIN = inputClosePin.value;
+
+  if (
+    confirmUser &&
+    confirmPIN &&
+    confirmUser === currentAccount.username &&
+    String(confirmPIN) === String(currentAccount.pin)
+  ) {
+    console.log(`Correct pin and username`);
+    const index = accounts.findIndex(
+      (acc) => acc.username === currentAccount.username
+    );
+    console.log(`index of account will be deleted`, index);
+
+    // Delete account
+    accounts.splice(index, 1);
+
+    // Hide UI
+    containerApp.style.opacity = 0;
+  } else {
+    console.log(`Incorrect pin or username`);
+  }
+  inputCloseUsername.value = inputClosePin.value = "";
+});
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
