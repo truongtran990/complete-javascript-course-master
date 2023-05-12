@@ -203,6 +203,25 @@ btnTransfer.addEventListener("click", function (event) {
   }
 });
 
+btnLoan.addEventListener("click", function (event) {
+  event.preventDefault();
+
+  const amount = Number(inputLoanAmount.value);
+
+  if (
+    amount > 0 &&
+    currentAccount.movements.some((mov) => mov >= amount * 0.1)
+  ) {
+    // Add movement
+    currentAccount.movements.push(amount);
+
+    // Update UI
+    updateUI(currentAccount);
+  }
+
+  inputLoanAmount.value = "";
+});
+
 btnClose.addEventListener("click", function (event) {
   event.preventDefault();
 
@@ -369,3 +388,205 @@ calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
 // const find450 = movements.find((mov) => mov == 450);
 
 // console.log(find450);
+
+const arr1 = [[1, 2, 3, [44, 55, [66, 77]]], [4, 5, 6], 7, 8];
+console.log(arr1.flat(3));
+
+console.log(`---------------------- SORT ----------------------`);
+
+/* 
+
+compareFn(a, b) return value    | sort order
+> 0                             | => b, a
+< 0                             | => a, b
+=== 0                           | keep original order of a and b
+*/
+const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
+// Ascending - Tang dan
+// movements.sort((a, b) => {
+//   if (a > b) {
+//     return 1;
+//   }
+
+//   if (b > a) {
+//     return -1;
+//   }
+// });
+
+// Descending - Giam dan
+// movements.sort((a, b) => {
+//   if (a > b) {
+//     return -1;
+//   }
+
+//   if (b > a) {
+//     return 1;
+//   }
+// });
+
+// a - b > 0 ? a > b : a < b -> Ascending
+// movements.sort((a, b) => a - b);
+
+// b - a > 0 ? b > a : b < a -> b > a -> > 0 -> b , a (b > a -> Descending)
+movements.sort((a, b) => b - a);
+console.log(movements);
+
+const newArr1 = new Array(7);
+
+newArr1.fill(10);
+console.log(newArr1);
+
+const arrFrom = Array.from({ length: 7 }, () => 100);
+console.log(arrFrom);
+
+const arrFrom2 = Array.from({ length: 7 }, (_, i) => i + 1);
+console.log(arrFrom2);
+
+labelBalance.addEventListener("click", function (event) {
+  const movementsUI = Array.from(
+    document.querySelectorAll(".movements__value"),
+    (el) => Number(el.textContent.replace("€", ""))
+  );
+  console.log(movementsUI);
+});
+
+/* 
+Convert sentence: "this is a nice title" -> "This Is a Nice Title"
+*/
+const convertString = (strInput) => {
+  const result = strInput
+    .toLowerCase()
+    .split(" ")
+    .map((word) => {
+      return word.length > 1 ? word[0].toUpperCase() + word.slice(1) : word;
+    })
+    .join(" ");
+  console.log(result);
+  return result;
+};
+
+const strInput = "THIS IS A NICE title";
+const result = convertString(strInput);
+console.log(`Result after formatting: ${result}`);
+
+/* 
+/////////////////////////// CODING CHALLENGE 4 ///////////////////////////
+*/
+const dogs = [
+  { weight: 22, curFood: 250, owners: ["Alice", "Bob"] },
+  { weight: 8, curFood: 200, owners: ["Matilda"] },
+  { weight: 13, curFood: 275, owners: ["Sarah", "John"] },
+  { weight: 32, curFood: 340, owners: ["Michael"] },
+];
+
+const calcRecommendFood = (dog) => {
+  dog["recommendedFood"] = Math.pow(dog.weight, 0.75) * 28;
+};
+
+const isSarahDog = (dog, owner = "Sarah") => {
+  return dog.owners.includes(owner);
+};
+
+const logCalcSarahFood = (dog) => {
+  if (isSarahDog(dog)) {
+    if (dog.curFood > 1.1 * dog.recommendedFood) {
+      console.log(`Eating too much`);
+    } else if (dog.curFood < 0.9 * dog.recommendedFood) {
+      console.log(`Eating too little`);
+    }
+  } else {
+    console.log("There is no long Sarah's dog");
+  }
+};
+
+const createTooMuchToLittle = (dogs) => {
+  const ownersEatTooMuch = [];
+  const ownersEatTooLittle = [];
+
+  for (const dog of dogs) {
+    if (dog.curFood > 1.1 * dog.recommendedFood) {
+      ownersEatTooMuch.push(dog.owners);
+    } else if (dog.curFood < 0.9 * dog.recommendedFood) {
+      ownersEatTooLittle.push(dog.owners);
+    }
+  }
+  console.log("createTooMuchToLittle: ", ownersEatTooMuch, ownersEatTooLittle);
+  return {
+    ownersEatTooMuch,
+    ownersEatTooLittle,
+  };
+};
+
+const logOwnerInfo = (ownersEatTooMuch, ownersEatTooLittle) => {
+  console.log(`11111 ${ownersEatTooMuch}`);
+  console.log(`${ownersEatTooMuch.flat().join(" and ")}'s dogs eat too much!`);
+
+  console.log(
+    `${ownersEatTooLittle.flat().join(" and ")}'s dogs eat too little!`
+  );
+};
+
+const isAnyDogEatingExactly = (dogs) => {
+  return dogs.some((dog) => dog.curFood === dog.recommendedFood);
+};
+
+const isAnyDogEatingOk = (dogs) => {
+  return dogs.some(
+    (dog) =>
+      dog.curFood >= 0.9 * dog.recommendedFood &&
+      dog.curFood <= 1.1 * dog.recommendedFood
+  );
+};
+
+const createDogEatingOk = (dogs) => {
+  return dogs
+    .map((dog) => {
+      return dog.curFood >= 0.9 * dog.recommendedFood &&
+        dog.curFood <= 1.1 * dog.recommendedFood
+        ? dog
+        : null;
+    })
+    .filter((dog) => dog !== null);
+};
+
+for (const dog of dogs) {
+  calcRecommendFood(dog);
+  logCalcSarahFood(dog);
+}
+
+console.log(`Calculate recommended!`);
+for (const dog of dogs) {
+  console.log(dog);
+}
+
+const { ownersEatTooMuch, ownersEatTooLittle } = createTooMuchToLittle(dogs);
+
+console.log(`ownersEatTooMuch: ${ownersEatTooMuch}`);
+console.log(`ownersEatTooLittle: ${ownersEatTooLittle}`);
+
+console.log(
+  `Log a string to the console for each array: [ownersEatTooMuch, ownersEatTooLittle]`
+);
+logOwnerInfo(ownersEatTooMuch, ownersEatTooLittle);
+
+console.log(
+  `Is any dog eating exactly the amount of food: ${isAnyDogEatingExactly(dogs)}`
+);
+console.log(
+  `Is any dog eating okay the amount of food: ${isAnyDogEatingOk(dogs)}`
+);
+
+const dogsEatingOkay = createDogEatingOk(dogs);
+console.log(`Dogs that are eating an okay amount of food`);
+for (const dog of dogsEatingOkay) {
+  console.log(dog);
+}
+
+const shallowCopyDogs = dogs.slice();
+shallowCopyDogs.sort(
+  (a, b) => Number(a.recommendedFood) - Number(b.recommendedFood)
+);
+console.log(`Sort dogs by recommended food portion in an ascending order`);
+for (const dog of shallowCopyDogs) {
+  console.log(dog);
+}
